@@ -9,12 +9,15 @@ const PORT = 1337;
 
 // server code
 app.set('view engine', 'html');
+
 app.set('view options', {
     layout: false
 });
+
 app.set('views', __dirname + "/views");
 app.engine('html', swig.renderFile);
-app.use(express.static(__dirname + '/public'));
+app.use('/', express.static(__dirname + '/public'));
+
 
 app.listen(PORT, () => {
     console.log('Server is listening on port ' + PORT);
@@ -27,9 +30,13 @@ app.listen(PORT, () => {
 //         db.ref().child('cards').push(card);
 //     })
 // })
+// Points to error handling middleware - place after all route handling
 
-// FOR USE WITH EXPRESS ROUTER
-// app.use('/cards', cardsRoutes);
+// GET request for the home page
+app.get('/', (req, res) => {
+    res.render('index.html');
+})
+
 
 app.get('/cards', (req, res) => {
     database.getAllCards().then((cards) => {
@@ -141,4 +148,23 @@ app.get('/cards/new-product', (req, res) => {
     }).catch((err) => {
         console.log(err);
     })
+});
+
+// Catches routes not found in previous code and sets status 404
+// Also forwards this error to the next error handling middleware
+app.use('/', (req, res, next) => {
+    const err = new Error('404 Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// Error handling middleware
+// Takes in error objects thrown and passed with next()
+// and renders an error page
+app.use((err, req, res, next) => {
+    // If the status is not previously set, make it 500
+    res.status(err.status || 500);
+    res.render('error.html');
+    // Do I need to call next() here?
+    // next();
 });
