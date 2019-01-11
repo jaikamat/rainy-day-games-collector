@@ -43,7 +43,7 @@ class Card {
 
     /**
      * Error handling for strange non-number string values in source data table.
-     * @param {String} string 
+     * @param {String} string
      */
     static convertNum(string) {
         if (string !== undefined && !isNaN(Number(string))) {
@@ -97,7 +97,7 @@ async function getCards() {
 
     let asyncToResolve = setHrefs.map((href) => {
         return retrieveHTML(BASE_URL + href);
-    })
+    });
 
     // using Promise.all to make get requests 
     // concurrently rather than one at a time in 
@@ -109,8 +109,8 @@ async function getCards() {
     for (let i = 0; i < setHrefs.length; i++) {
         console.log('Collecting cards' + '.'.repeat(i));
         let $ = setHrefs[i];
-
         let rows = $('tr');
+
         for (let j = 0; j < rows.length; j++) {
             let card = {};
             let current = $(rows[j]);
