@@ -18,6 +18,17 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/paginate', (req, res) => {
+    // Sort data prior
+    // pageNo and size (num of records on page)
+    database.getAllCardsPaginate(req.query.pageNo)
+    .then((cards) => {
+        res.render('cards.html', {
+            cards: cards
+        });
+    });
+});
+
 // TODO: THIS MUST BE IMPLEMENTED AS A POST REQUEST
 router.get('/update-collection', (req, res) => {
     Promise.all([scrape.getCards(), database.getAllCards()])
@@ -84,10 +95,7 @@ router.get('/search', (req, res) => {
 });
 
 router.get('/update-card', (req, res) => {
-    let parsedUrl = url.parse(req.url);
-    let parsedQuery = querystring.parse(parsedUrl.query);
-    
-    database.updateCard(parsedQuery)
+    database.updateCard(req.query)
     .then((card) => {
         res.send("this worked");
     }).catch((error) => {

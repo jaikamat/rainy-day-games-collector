@@ -35,6 +35,7 @@ async function createCard(card) {
  * @returns Returns the card object
  */
 async function updateCard(card) {
+    // TODO: add error handling and type checking to the req.query before updating
     let cardToUpdate = await db.ref('cards')
     .orderByChild('title').equalTo(card.title)
     .once('child_added', (snapshot) => {
@@ -79,8 +80,27 @@ async function getAllCards() {
     return cards;
 }
 
+async function getAllCardsPaginate(pageNo, title) {
+    // get no. of records
+    // let title = title ? title : null;
+
+    // divide that by size to get numpages
+    let pageCards = [];
+
+    let first = await db.ref('cards')
+    .orderByChild('title')
+    .limitToFirst(pageNo * 10).once('value', (snapshot) => {
+        snapshot.forEach((snap) => {
+            pageCards.push(snap.val());
+        })
+    });
+    console.log(pageCards);
+    return pageCards;
+}
+
 module.exports.getCardByTitle = getCardByTitle;
 module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
 module.exports.removeAllCards = removeAllCards;
+module.exports.getAllCardsPaginate = getAllCardsPaginate;
