@@ -20,14 +20,6 @@ app.listen(PORT, () => {
     console.log('Server is listening on port ' + PORT);
 })
 
-// // seed scraped card data to firebase
-// getCardsFromRDG().then((cards) => {
-//     // add each card to db as a child of 'cards'
-//     cards.forEach((card) => {
-//         db.ref().child('cards').push(card);
-//     })
-// })
-
 app.use('/cards', cardRoutes);
 
 // GET request for the home page

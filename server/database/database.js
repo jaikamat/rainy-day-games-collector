@@ -1,4 +1,5 @@
 const firebase = require('firebase-admin');
+const moment = require('moment');
 
 let serviceAccount = require(__dirname + '/../keys/rainy-day-games-searcher-firebase-adminsdk-z7jgg-efcf1425fb.json');
 
@@ -10,11 +11,21 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /**
+ * Removes all entries at the 'cards' ref
+ * Used only during seeding 
+ */
+async function removeAllCards() {
+    return await db.ref('cards').remove();
+}
+
+/**
  * Writes a card object to Firebase under the ref 'cards'
  * @param {Object} card The card object to create
  * @returns Returns the key of the created card
  */
 async function createCard(card) {
+    // Add a timestamp to the card object
+    card.timestamp = moment().unix();
     return await db.ref('cards').push(card);
 }
 
@@ -28,6 +39,8 @@ async function updateCard(card) {
     .orderByChild('title').equalTo(card.title)
     .once('child_added', (snapshot) => {
         snapshot.ref.update({
+            // Update timestamp on card update
+            timestamp: moment().unix(),
             quantity: Number(card.quantity)
         });
     });
@@ -70,3 +83,4 @@ module.exports.getCardByTitle = getCardByTitle;
 module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
+module.exports.removeAllCards = removeAllCards;

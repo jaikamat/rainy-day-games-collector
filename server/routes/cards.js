@@ -64,6 +64,7 @@ router.get('/testing123', (req, res) => {
 // when "update cards" is pressed, need to return new product
 // add "new" badge to new product divs and sort by new
 // add cards to firebase
+// TODO: need to update the new card/updated card's updateDate
 
 router.get('/search', (req, res) => {
     let parsedUrl = url.parse(req.url);
@@ -115,6 +116,18 @@ router.get('/new-product', (req, res) => {
         });
     }).catch((err) => {
         console.log(err);
+    })
+});
+
+router.get('/seed', (req, res) => {
+    // seed scraped card data to firebase
+    scrape.getCards().then((cards) => {
+        database.removeAllCards();
+        cards.forEach((card) => {
+            database.createCard(card);
+        });
+    }).then(() => {
+        res.send('Scrape & Seed Completed');
     })
 });
 
