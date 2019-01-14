@@ -19,9 +19,7 @@ router.get('/', (req, res) => {
 });
 
 // TODO: THIS MUST BE IMPLEMENTED AS A POST REQUEST
-router.get('/testing123', (req, res) => {
-    // TODO: scrape, then add new cards in firebase
-
+router.get('/update-collection', (req, res) => {
     Promise.all([scrape.getCards(), database.getAllCards()])
     .then((cards) => {
         let newCards = cards[0];
@@ -29,28 +27,34 @@ router.get('/testing123', (req, res) => {
         let newProduct = [];
 
         //TODO: Optimize this insane list diff going on here. It works but...
+        // Logic:
+        // if the price OR qty of a new product has changed,
+        // update the card with new price and/or qty
+        // if the new card does not exist in the db
+        // add the card to the db
         newCards.forEach((newCard) => {
-            // TODO: find its corresponding card in the oldcard list and update the qty in the db
-
-            // diffing for title equality, st code equality and quantity increase
+            // Diffing for title equality, set code equality and quantity change
             oldCards.forEach((oldCard) => {
-                if (newCard.title === oldCard.title 
-                    && newCard.quantity > oldCard.quantity
+                if (newCard.title === oldCard.title
+                    && newCard.quantity !== oldCard.quantity
                     && newCard.setCode === oldCard.setCode
                     && newCard.rarity === oldCard.rarity) {
                     newProduct.push(newCard);
+                    // Update the card in the database
+                    database.updateCard(newCard);
                 }
             })
-            // finds if new card's title is present in the old card list
+            // Finds if new card's title is present in the old card list
             let cardIsPresent = oldCards.findIndex((oldCard) => {
-                return oldCard.title === newCard.title;
+                return oldCard.title === newCard.title && oldCard.setCode === newCard.setCode;
             });
-            // if the new card's title is not present, then add to newProduct list
+            // If the new card's title is not present, then add to newProduct list
             if (cardIsPresent < 0) {
                 console.log('the card we pushed:')
                 console.log(newCard);
                 newProduct.push(newCard);
-                // TODO: add the card to the db here
+                // Add the card to the database
+                database.createCard(newCard);
             }
         });
         res.render('cards.html', {
@@ -82,12 +86,12 @@ router.get('/search', (req, res) => {
 router.get('/update-card', (req, res) => {
     let parsedUrl = url.parse(req.url);
     let parsedQuery = querystring.parse(parsedUrl.query);
-
+    
     database.updateCard(parsedQuery)
     .then((card) => {
         res.send("this worked");
     }).catch((error) => {
-        res.send(error);
+        console.log(error);
     });
 })
 
@@ -128,6 +132,8 @@ router.get('/seed', (req, res) => {
         });
     }).then(() => {
         res.send('Scrape & Seed Completed');
+    }).catch((err) => {
+        console.log(err);
     })
 });
 
