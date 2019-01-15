@@ -93,23 +93,22 @@ async function getAllCards() {
     return cards;
 }
 
-async function getAllCardsPaginate(pageNo, title) {
-    // get no. of records
-    // let title = title ? title : null;
-
-    // divide that by size to get numpages
+// TODO: Need to figure out how to make this more modular for user sort queries 
+// ex. by title, date of update (descending), price, etc.
+// Currently only returns cards in alphabetical order
+async function getCardsPaginated(title, key) {
     let pageCards = [];
 
-    let first = await db.ref('cards')
+    await db.ref('cards')
     .orderByChild('title')
-    .limitToFirst(pageNo * 10).once('value', (snapshot) => {
-        // console.log(snapshot.val());
-        snapshot.forEach((snap) => {
-            pageCards.push(snap.val());
-            console.log(snap.key);
-        })
+    .startAt(title, key) // This is optional, will return first entries if not specified
+    .limitToFirst(10).once('value', (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            let card = childSnapshot.val();
+            card.key = childSnapshot.key;
+            pageCards.push(card);
+        });
     });
-    // console.log(pageCards);
     return pageCards;
 }
 
@@ -118,4 +117,4 @@ module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
 module.exports.removeAllCards = removeAllCards;
-module.exports.getAllCardsPaginate = getAllCardsPaginate;
+module.exports.getCardsPaginated = getCardsPaginated;

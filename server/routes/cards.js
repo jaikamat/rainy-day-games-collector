@@ -19,9 +19,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/paginate', (req, res) => {
-    // Sort data prior
-    // pageNo and size (num of records on page)
-    database.getAllCardsPaginate(req.query.pageNo)
+    database.getCardsPaginated()
     .then((cards) => {
         res.render('cards.html', {
             cards: cards
@@ -101,7 +99,7 @@ router.get('/update-card', (req, res) => {
     }).catch((error) => {
         console.log(error);
     });
-})
+});
 
 router.get('/new-product', (req, res) => {
     // Grabs the new card list from RDG, and the old cards in Firebase

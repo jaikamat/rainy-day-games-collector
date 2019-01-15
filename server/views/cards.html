@@ -7,6 +7,7 @@
     <div class="child">Title</div>
     <div class="child">Price</div>
     <div class="child">Quantity</div>
+    <div class="child">Key</div>
 </div>
 {% for card in cards %}
 <div class="container highlight-{{ loop.index % 2 === 0 }}">
@@ -14,5 +15,6 @@
     <div class="child">{{ card.title }}</div>
     <div class="child">${{ card.price.toFixed(2) }}</div>
     <div class="child">{{ card.quantity }}</div>
+    <div class="child">{{ card.key }}</div>
 </div>
 {% endfor %}
