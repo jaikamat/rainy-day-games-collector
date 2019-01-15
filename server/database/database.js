@@ -30,14 +30,16 @@ async function createCard(card) {
 }
 
 /**
- * Updates a card in Firebase
+ * Updates a card's `quantity` in Firebase
+ * TODO: need to update price here as well, and check for NaN values
  * @param {Object} card The card object with desired properties
  * @returns Returns the card object
  */
 async function updateCard(card) {
     // TODO: add error handling and type checking to the req.query before updating
     let cardToUpdate = await db.ref('cards')
-    .orderByChild('title').equalTo(card.title)
+    .orderByChild('title')
+    .equalTo(card.title)
     .once('child_added', (snapshot) => {
         snapshot.ref.update({
             // Update timestamp on card update
@@ -45,7 +47,12 @@ async function updateCard(card) {
             quantity: Number(card.quantity)
         });
     });
-    return cardToUpdate.val();
+
+    // Add key to updated card and return
+    let returnCard = cardToUpdate.val();
+    returnCard.key = cardToUpdate.key;
+
+    return returnCard;
 }
 
 /**
@@ -56,10 +63,16 @@ async function updateCard(card) {
  * @returns Returns object or `null` for not found
  */
 async function getCardByTitle(title) {
-    let card = await db.ref('cards')
-    .orderByChild('title').equalTo(title)
+    let card;
+    
+    await db.ref('cards')
+    .orderByChild('title')
+    .equalTo(title)
     .once('value', (snapshot) => {
-        return snapshot.val();
+        snapshot.forEach((childSnapshot) => {
+            card = childSnapshot.val();
+            card.key = childSnapshot.key;
+        });
     });
     return card;
 }
@@ -90,11 +103,13 @@ async function getAllCardsPaginate(pageNo, title) {
     let first = await db.ref('cards')
     .orderByChild('title')
     .limitToFirst(pageNo * 10).once('value', (snapshot) => {
+        // console.log(snapshot.val());
         snapshot.forEach((snap) => {
             pageCards.push(snap.val());
+            console.log(snap.key);
         })
     });
-    console.log(pageCards);
+    // console.log(pageCards);
     return pageCards;
 }
 
