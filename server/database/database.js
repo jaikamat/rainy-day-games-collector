@@ -93,22 +93,37 @@ async function getAllCards() {
     return cards;
 }
 
-// TODO: Need to figure out how to make this more modular for user sort queries 
-// ex. by title, date of update (descending), price, etc.
-// Currently only returns cards in alphabetical order
-async function getCardsPaginated(title, key) {
+// TODO: Flesh out the user sot queries to minimize code as well as errors
+async function getCardsPaginated(childProperty, key, sortBy) {
     let pageCards = [];
 
-    await db.ref('cards')
-    .orderByChild('title')
-    .startAt(title, key) // This is optional, will return first entries if not specified
-    .limitToFirst(10).once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            let card = childSnapshot.val();
-            card.key = childSnapshot.key;
-            pageCards.push(card);
+    if (!sortBy || sortBy === 'alphabetical') {
+        await db.ref('cards')
+        .orderByChild('title')
+        .startAt(childProperty, key) // This is optional, will return first entries if not specified
+        .limitToFirst(10)
+        .once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                let card = childSnapshot.val();
+                card.key = childSnapshot.key;
+                pageCards.push(card);
+            });
         });
-    });
+    } else if (sortBy === 'timestamp') {
+        // returns sorted cards in descending timestamp order
+        await db.ref('cards')
+        .orderByChild('timestamp')
+        // .startAt(childProperty, key) // Somehow this isn't working when passed `null` arguments, unlike the above
+        .limitToLast(100)
+        .once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                let card = childSnapshot.val();
+                card.key = childSnapshot.key;
+                pageCards.push(card);
+            })
+            pageCards.reverse(); // Firebase has no way to sort queries in descending order
+        });
+    }
     return pageCards;
 }
 
