@@ -1,0 +1,25 @@
+{
+  "name": "rain_day_games_search",
+  "version": "1.0.0",
+  "description": "a search function with UI for a local game store in oregon",
+  "main": "index.js",
+  "scripts": {
+    "devserver": "./node_modules/nodemon/bin/nodemon.js server/index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jai Kamat",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "firebase-admin": "^6.4.0",
+    "moment": "^2.23.0",
+    "node-fetch": "^2.3.0",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
