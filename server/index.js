@@ -2,6 +2,7 @@ const express = require('express');
 const cardRoutes = require('./routes/cards')
 const swig = require('swig')
 const app = express();
+const morgan = require('morgan');
 const PORT = 1337;
 
 // server code
@@ -14,6 +15,7 @@ app.set('view options', {
 app.set('views', __dirname + "/views");
 app.engine('html', swig.renderFile);
 app.use('/', express.static(__dirname + '/public'));
+app.use(morgan('combined'));
 
 
 app.listen(PORT, () => {
