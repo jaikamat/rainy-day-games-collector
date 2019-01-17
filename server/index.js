@@ -14,8 +14,8 @@ app.set('view options', {
 
 app.set('views', __dirname + "/views");
 app.engine('html', swig.renderFile);
-app.use('/', express.static(__dirname + '/public'));
 app.use(morgan('combined'));
+app.use('/', express.static(__dirname + '/public'));
 
 
 app.listen(PORT, () => {
