@@ -49,6 +49,7 @@ router.get('/update-collection', (req, res) => {
                     && newCard.setCode === oldCard.setCode
                     && newCard.rarity === oldCard.rarity) {
                     newProduct.push(newCard);
+                    // TODO: should remove the card from the array to make searching faster
                     // Update the card in the database
                     database.updateCard(newCard);
                 }

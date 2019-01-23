@@ -11,10 +11,17 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /**
+ * TODO: Need to write pseudo "schema" for firebase card objects to avoid errors and sanitize data, (avoid NaN values)
+ * Needs to take in card objects from scrape.js and ensure values are type-checked, throw error with message and card if not.
+ * TODO: Remove un-sets and flip data from the scraped source. It produces errors in the long run.
+ */
+
+/**
  * Removes all entries at the 'cards' ref
  * Used only during seeding 
  */
 async function removeAllCards() {
+    console.log('All cards removed');
     return await db.ref('cards').remove();
 }
 
