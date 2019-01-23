@@ -9,6 +9,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
     database.getAllCards().then((cards) => {
         // scrape.getCards().then((cards) => {
+        res.status(200);
         res.render('cards.html', {
             cards: cards,
             total: cards.length
@@ -21,6 +22,7 @@ router.get('/', (req, res) => {
 router.get('/paginate', (req, res) => {
     database.getCardsPaginated()
     .then((cards) => {
+        res.status(200);
         res.render('cards.html', {
             cards: cards
         });
@@ -48,13 +50,13 @@ router.get('/update-collection', (req, res) => {
                     database.updateCard(newCards[i]);
                 }
                 oldCards.splice(index, 1); // Remove the card from the array to increase speed
-                
+
             } else if (index === -1) { // If the index is not found, then add card to db
                 newProduct.push(newCards[i]);
                 database.createCard(newCards[i]);
             }
         }
-
+        res.status(200);
         res.render('cards.html', {
             cards: newProduct
         });
@@ -75,6 +77,7 @@ router.get('/search', (req, res) => {
     database.getCardByTitle(parsedQuery.title)
     .then((card) => {
         console.log('searched card sent');
+        res.status(200);
         res.send(card);
     }).catch((error) => {
         console.log(error);
@@ -84,6 +87,7 @@ router.get('/search', (req, res) => {
 router.get('/update-card', (req, res) => {
     database.updateCard(req.query)
     .then((card) => {
+        res.status(200);
         res.send("this worked");
     }).catch((error) => {
         console.log(error);
@@ -126,6 +130,7 @@ router.get('/seed', (req, res) => {
             database.createCard(card);
         });
     }).then(() => {
+        res.status(200);
         res.send('Scrape & Seed Completed');
     }).catch((err) => {
         console.log(err);
