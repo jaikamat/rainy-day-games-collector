@@ -15,6 +15,8 @@ router.get('/', (req, res) => {
             total: cards.length
         })
     }).catch((error) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(error);
     });
 });
@@ -26,7 +28,11 @@ router.get('/paginate', (req, res) => {
         res.render('cards.html', {
             cards: cards
         });
-    });
+    }).catch((error) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
+        console.log(error);
+    })
 });
 
 // TODO: THIS MUST BE IMPLEMENTED AS A POST REQUEST
@@ -61,6 +67,8 @@ router.get('/update-collection', (req, res) => {
             cards: newProduct
         });
     }).catch((error) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(error);
     })
 })
@@ -80,6 +88,8 @@ router.get('/search', (req, res) => {
         res.status(200);
         res.send(card);
     }).catch((error) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(error);
     });
 });
@@ -90,6 +100,8 @@ router.get('/update-card', (req, res) => {
         res.status(200);
         res.send("this worked");
     }).catch((error) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(error);
     });
 });
@@ -118,6 +130,8 @@ router.get('/new-product', (req, res) => {
             cards: newProduct
         });
     }).catch((err) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(err);
     })
 });
@@ -133,6 +147,8 @@ router.get('/seed', (req, res) => {
         res.status(200);
         res.send('Scrape & Seed Completed');
     }).catch((err) => {
+        res.status(500);
+        res.send('ERROR MESSAGE!')
         console.log(err);
     })
 });
