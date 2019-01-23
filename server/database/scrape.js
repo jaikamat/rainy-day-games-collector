@@ -55,23 +55,15 @@ class Card {
     /**
      * Removes unneeded card object values from scraped data.
      * @param {Object} card 
-     * @param {Array} strings - any number of strings to compare the object values to
+     * @param {Object} filters - object with string values in array to filter on
      * @returns {Boolean}
      */
-    static removeCards(card, strings) {
-        let objProps = [];
-
-        // obj.keys() is not a function...have to use old loop for now
-        for (let prop in card) {
-            if (card.hasOwnProperty(prop)) {
-                objProps.push(card[prop]);
-            }
-        }
-
-        // Return false if any arg matches card object values
-        for (let i = 0; i < strings.length; i++) {
-            if (objProps.indexOf(strings[i]) > 0) {
-                return false;
+    static removeCards(card, filters) {
+        for (let prop in filters) {
+            if (filters.hasOwnProperty(prop)) {
+                if (filters[prop].indexOf(card[prop]) !== -1) { // See if the card prop is in the filter props
+                    return false;
+                }
             }
         }
         return true;
@@ -154,8 +146,12 @@ async function getCards() {
     return cardData.filter((card) => {
         // Filtering on 'ZZT' and 'UST' because un-sets and tokens are ignored,
         // and source data produces errors
-        return Card.removeCards(
-            card, ['not found', 'Card Name', 'ZZT', 'UST', 'UGL', 'UNH']);
+        let filters = {
+            quantity: ['not found'],
+            title: ['Card Name'],
+            setCode: ['ZZT', 'UST', 'UGL', 'UNH']
+        };
+        return Card.removeCards(card, filters);
     });
 }
 
