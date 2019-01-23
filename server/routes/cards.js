@@ -46,14 +46,15 @@ router.get('/update-collection', (req, res) => {
                 if (newCards[i].quantity !== oldCards[index].quantity) { // Check for changes in quantity
                     newProduct.push(newCards[i]);
                     database.updateCard(newCards[i]);
-                    oldCards.splice(index, 1); // Remove the card from the array to increase speed
                 }
+                oldCards.splice(index, 1); // Remove the card from the array to increase speed
+                
             } else if (index === -1) { // If the index is not found, then add card to db
                 newProduct.push(newCards[i]);
                 database.createCard(newCards[i]);
             }
         }
-        
+
         res.render('cards.html', {
             cards: newProduct
         });
