@@ -35,38 +35,25 @@ router.get('/update-collection', (req, res) => {
         let oldCards = cards[1];
         let newProduct = [];
 
-        //TODO: Optimize this insane list diff going on here. It works but...
-        // Logic:
-        // if the price OR qty of a new product has changed,
-        // update the card with new price and/or qty
-        // if the new card does not exist in the db
-        // add the card to the db
-        newCards.forEach((newCard) => {
-            // Diffing for title equality, set code equality and quantity change
-            oldCards.forEach((oldCard) => {
-                if (newCard.title === oldCard.title
-                    && newCard.quantity !== oldCard.quantity
-                    && newCard.setCode === oldCard.setCode
-                    && newCard.rarity === oldCard.rarity) {
-                    newProduct.push(newCard);
-                    // TODO: should remove the card from the array to make searching faster
-                    // Update the card in the database
-                    database.updateCard(newCard);
-                }
-            })
-            // Finds if new card's title is present in the old card list
-            let cardIsPresent = oldCards.findIndex((oldCard) => {
-                return oldCard.title === newCard.title && oldCard.setCode === newCard.setCode;
+        for (let i = 0; i < newCards.length; i++) { // Iterate over newly scraped data
+            let index = oldCards.findIndex((el) => {
+                return newCards[i].title === el.title // Title must be equal
+                && newCards[i].setCode === el.setCode // Set Code must be equal
+                && newCards[i].rarity === el.rarity // Rarity must be equal
             });
-            // If the new card's title is not present, then add to newProduct list
-            if (cardIsPresent < 0) {
-                console.log('the card we pushed:')
-                console.log(newCard);
-                newProduct.push(newCard);
-                // Add the card to the database
-                database.createCard(newCard);
+
+            if (index >= 0) { // Card was found
+                if (newCards[i].quantity !== oldCards[index].quantity) { // Check for changes in quantity
+                    newProduct.push(newCards[i]);
+                    database.updateCard(newCards[i]);
+                    oldCards.splice(index, 1); // Remove the card from the array to increase speed
+                }
+            } else if (index === -1) { // If the index is not found, then add card to db
+                newProduct.push(newCards[i]);
+                database.createCard(newCards[i]);
             }
-        });
+        }
+        
         res.render('cards.html', {
             cards: newProduct
         });
