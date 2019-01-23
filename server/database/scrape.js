@@ -55,13 +55,13 @@ class Card {
     /**
      * Removes unneeded card object values from scraped data.
      * @param {Object} card 
-     * @param {Array} strings - any number of strings to compare the object values to 
+     * @param {Array} strings - any number of strings to compare the object values to
      * @returns {Boolean}
      */
     static removeCards(card, strings) {
         let objProps = [];
 
-        // obj.keys() is not a function...have to use old loop for now 
+        // obj.keys() is not a function...have to use old loop for now
         for (let prop in card) {
             if (card.hasOwnProperty(prop)) {
                 objProps.push(card[prop]);
