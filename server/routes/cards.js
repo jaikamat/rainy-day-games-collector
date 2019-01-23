@@ -79,29 +79,28 @@ router.get('/update-collection', (req, res) => {
 // TODO: need to update the new card/updated card's updateDate
 
 router.get('/search', (req, res) => {
-    let parsedUrl = url.parse(req.url);
-    let parsedQuery = querystring.parse(parsedUrl.query);
-
-    database.getCardByTitle(parsedQuery.title)
+    database.getCardByTitle(req.query.title)
     .then((card) => {
         console.log('searched card sent');
+        console.log(card);
         res.status(200);
         res.send(card);
     }).catch((error) => {
         res.status(500);
-        res.send('ERROR MESSAGE!')
+        res.send(error.stack)
         console.log(error);
     });
 });
 
 router.get('/update-card', (req, res) => {
+    console.log(req.query);
     database.updateCard(req.query)
     .then((card) => {
         res.status(200);
-        res.send("this worked");
+        res.send(card);
     }).catch((error) => {
         res.status(500);
-        res.send('ERROR MESSAGE!')
+        res.send(error.stack)
         console.log(error);
     });
 });

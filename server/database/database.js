@@ -36,7 +36,13 @@ async function createCard(card) {
  * @returns Returns the card object
  */
 async function updateCard(card) {
-    // TODO: add error handling and type checking to the req.query before updating
+    if (!card.hasOwnProperty('quantity')) {
+        throw new Error('Quantity was not provided');
+    }
+    if (isNaN(card.quantity)) {
+        throw new Error('Quantity was not correct');
+    }
+
     let cardToUpdate = await db.ref('cards')
     .orderByChild('title')
     .equalTo(card.title)
@@ -49,10 +55,10 @@ async function updateCard(card) {
     });
 
     // Add key to updated card and return
-    let returnCard = cardToUpdate.val();
-    returnCard.key = cardToUpdate.key;
+    let updatedCard = cardToUpdate.val();
+    updatedCard.key = cardToUpdate.key;
 
-    return returnCard;
+    return updatedCard;
 }
 
 /**
@@ -74,7 +80,9 @@ async function getCardByTitle(title) {
             card.key = childSnapshot.key;
         });
     });
-    return card;
+
+    if (card) return card
+    else throw new Error('Card was not found');
 }
 
 /**
