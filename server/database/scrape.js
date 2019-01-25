@@ -99,9 +99,6 @@ async function getCards() {
         setHrefs.push($(element).attr('href'));
     });
 
-    // TODO: remove this after RNA is added to the scraped data - their site is a WIP
-    setHrefs.shift();
-
     let setCodes = setHrefs.map((href) => {
         return Card.getSetCode(href);
     });
