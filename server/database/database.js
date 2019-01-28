@@ -42,19 +42,23 @@ async function updateCard(card) {
     if (isNaN(card.quantity)) {
         throw new Error('Quantity was not correct');
     }
+    if (!card.hasOwnProperty('setCode')) {
+        throw new Error('Set Code is required to update a card')
+    }
 
-    // TODO: this is only finding the first instance of a title and updating it,
-    // so for cards with multiple printings, we are altering old print data.
-    // Need to match setcode as well
     let cardToUpdate = await db.ref('cards')
     .orderByChild('title')
     .equalTo(card.title)
-    .once('child_added', (snapshot) => {
-        snapshot.ref.update({
-            // Update timestamp on card update
-            timestamp: moment().unix(),
-            quantity: Number(card.quantity)
-        });
+    .once('value', (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+            if (card.title === childSnapshot.val().title // Titles must match
+            && card.setCode === childSnapshot.val().setCode) { // Set Codes, aka printings, must match
+                childSnapshot.ref.update({
+                    timestamp: moment().unix(),
+                    quantity: Number(card.quantity)
+                })
+            }
+        })
     });
 
     // Add key to updated card and return
