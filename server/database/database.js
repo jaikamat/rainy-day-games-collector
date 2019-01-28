@@ -43,6 +43,9 @@ async function updateCard(card) {
         throw new Error('Quantity was not correct');
     }
 
+    // TODO: this is only finding the first instance of a title and updating it,
+    // so for cards with multiple printings, we are altering old print data.
+    // Need to match setcode as well
     let cardToUpdate = await db.ref('cards')
     .orderByChild('title')
     .equalTo(card.title)
@@ -69,20 +72,22 @@ async function updateCard(card) {
  * @returns Returns object or `null` for not found
  */
 async function getCardByTitle(title) {
-    let card;
+    let cards = [];
     
     await db.ref('cards')
     .orderByChild('title')
     .equalTo(title)
     .once('value', (snapshot) => {
         snapshot.forEach((childSnapshot) => {
-            card = childSnapshot.val();
-            card.key = childSnapshot.key;
+            let myCard
+            myCard = childSnapshot.val();
+            myCard.key = childSnapshot.key;
+            cards.push(myCard);
         });
     });
 
-    if (card) return card
-    else throw new Error('Card was not found');
+    if (cards.length === 0) throw new Error('Card was not found');
+    else return cards;
 }
 
 /**
