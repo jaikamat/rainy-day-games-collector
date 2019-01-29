@@ -1,6 +1,56 @@
 const firebase = require('firebase-admin');
 const moment = require('moment');
 
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('database', 'username', 'password', {
+    host: 'localhost',
+    dialect: 'sqlite',
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    },
+    storage: './cardsDatabase.db'
+});
+
+sequelize.authenticate()
+.then(() => {
+    console.log('A connection has been established');
+}).catch(() => {
+    console.log('Database not found');
+})
+
+const Card = sequelize.define('card', {
+    isFlip: { type: Sequelize.BOOLEAN },
+    color: { type: Sequelize.STRING },
+    rarity: { type: Sequelize.STRING },
+    title: { type: Sequelize.STRING },
+    setCode: { type: Sequelize.STRING },
+    price: { type: Sequelize.DECIMAL },
+    quantity: { type: Sequelize.INTEGER }
+});
+
+Card.sync({ force: true })
+.then(() => {
+    return Card.create({
+        isFlip: false,
+        color: 'W',
+        rarity: 'R',
+        title: 'Rule of Law',
+        setCode: 'RNA',
+        price: 15.66,
+        quantity: 3
+    });
+}).then(() => {
+    Card.findAll()
+    .then((card) => {
+        console.log(card);
+    }).catch((error) => {
+        console.log(error);
+    })
+})
+
+
 let serviceAccount = require(__dirname + '/../keys/rainy-day-games-searcher-firebase-adminsdk-z7jgg-efcf1425fb.json');
 
 firebase.initializeApp({
