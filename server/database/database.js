@@ -70,21 +70,18 @@ async function removeAllCards() {
 }
 
 /**
- * Writes a card object to Firebase under the ref 'cards'
+ * Writes a card object to sqlite3
  * @param {Object} card The card object to create
- * @returns Returns the key of the created card
+ * @returns Nothing
  */
 async function createCard(card) {
-    // Add a timestamp to the card object
-    // card.timestamp = moment().unix();
-    // return await db.ref('cards').push(card);
     await Card.create(card);
 }
 
 /**
- * Updates a card's `quantity` in Firebase
+ * Updates a card's `quantity` in sqlite3
  * @param {Object} card The card object with desired properties
- * @returns Returns the card object
+ * @returns The affected card record
  */
 async function updateCard(card) {
     if (!card.hasOwnProperty('quantity')) {
@@ -97,34 +94,33 @@ async function updateCard(card) {
         throw new Error('Set Code is required to update a card')
     }
 
-    let cardToUpdate = await db.ref('cards')
-    .orderByChild('title')
-    .equalTo(card.title)
-    .once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            if (card.title === childSnapshot.val().title // Titles must match
-            && card.setCode === childSnapshot.val().setCode) { // Set Codes, aka printings, must match
-                childSnapshot.ref.update({
-                    timestamp: moment().unix(),
-                    quantity: Number(card.quantity)
-                })
-            }
-        })
+    return await Card.update({
+        quantity: card.quantity
+    }, {
+        where: {
+            title: card.title,
+            setCode: card.setCode
+        }
+    }).then((affectedRows) => {
+        if (affectedRows[0] === 0) {
+            return "No cards were updated"
+        } else {
+            // Return the card that was updated - must re-query
+            return Card.findOne({
+                where: {
+                    title: card.title,
+                    setCode: card.setCode
+                }
+            });
+        }
     });
-
-    // Add key to updated card and return
-    let updatedCard = cardToUpdate.val();
-    updatedCard.key = cardToUpdate.key;
-
-    return updatedCard;
 }
 
 /**
- // TODO: implement some error handling for null values
  // TODO: Possibly have this method be more modular and take more search params
  * Queries Firebase for a card by title
  * @param {String} title The case sensitive card title
- * @returns Returns object or `null` for not found
+ * @returns Returns an array of values
  */
 async function getCardByTitle(title) {
     return Card.findAll({
