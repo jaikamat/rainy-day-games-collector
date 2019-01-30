@@ -1,6 +1,5 @@
-const firebase = require('firebase-admin');
-
 const Sequelize = require('sequelize');
+
 const sequelize = new Sequelize('database', 'username', 'password', {
     host: 'localhost',
     dialect: 'sqlite',
@@ -48,25 +47,6 @@ const Card = sequelize.define('card', {
 //         console.log(error);
 //     })
 // })
-
-
-let serviceAccount = require(__dirname + '/../keys/rainy-day-games-searcher-firebase-adminsdk-z7jgg-efcf1425fb.json');
-
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
-    databaseURL: "https://rainy-day-games-searcher.firebaseio.com" 
-});
-
-const db = firebase.database();
-
-/**
- * Removes all entries at the 'cards' ref
- * Used only during seeding 
- */
-async function removeAllCards() {
-    console.log('All cards removed');
-    return await db.ref('cards').remove();
-}
 
 /**
  * Writes a card object to sqlite3
@@ -144,5 +124,4 @@ module.exports.getCardByTitle = getCardByTitle;
 module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
-module.exports.removeAllCards = removeAllCards;
 module.exports.getCardsPaginated = getCardsPaginated;

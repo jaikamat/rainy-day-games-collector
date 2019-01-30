@@ -1,5 +1,3 @@
-const querystring = require('querystring');
-const url = require('url');
 const scrape = require('../database/scrape');
 const database = require('../database/database');
 const express = require('express');
