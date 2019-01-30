@@ -128,53 +128,16 @@ async function getCardByTitle(title) {
 }
 
 /**
- * Retrieves all the cards stored in Firebase
- * @returns Returns all card objects, with keys
+ * Retrieves all the cards stored in sqlite3
+ * @returns Returns an array of card objects
  */
 async function getAllCards() {
-    let cards = [];
-    await db.ref('cards').once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            let card = childSnapshot.val();
-            card.key = childSnapshot.key;
-            cards.push(card);
-        })
-    });
-    return cards;
+    return await Card.findAll();
 }
 
-// TODO: Flesh out the user sot queries to minimize code as well as errors
+// TODO: Flesh out the user sort queries to minimize code as well as errors
 async function getCardsPaginated(childProperty, key, sortBy) {
-    let pageCards = [];
-
-    if (!sortBy || sortBy === 'alphabetical') {
-        await db.ref('cards')
-        .orderByChild('title')
-        .startAt(childProperty, key) // This is optional, will return first entries if not specified
-        .limitToFirst(10)
-        .once('value', (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                let card = childSnapshot.val();
-                card.key = childSnapshot.key;
-                pageCards.push(card);
-            });
-        });
-    } else if (sortBy === 'timestamp') {
-        // returns sorted cards in descending timestamp order
-        await db.ref('cards')
-        .orderByChild('timestamp')
-        // .startAt(childProperty, key) // Somehow this isn't working when passed `null` arguments, unlike the above
-        .limitToLast(100)
-        .once('value', (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                let card = childSnapshot.val();
-                card.key = childSnapshot.key;
-                pageCards.push(card);
-            })
-            pageCards.reverse(); // Firebase has no way to sort queries in descending order
-        });
-    }
-    return pageCards;
+    // TODO: re-code this with updatedAt and title sort
 }
 
 module.exports.getCardByTitle = getCardByTitle;
