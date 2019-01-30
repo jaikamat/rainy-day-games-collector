@@ -136,9 +136,8 @@ router.get('/new-product', (req, res) => {
 });
 
 router.get('/seed', (req, res) => {
-    // seed scraped card data to firebase
     scrape.getCards().then((cards) => {
-        database.removeAllCards();
+        //TODO: This needs to be a function that is wrapped in a promise
         cards.forEach((card) => {
             database.createCard(card);
         });

@@ -15,7 +15,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 
 sequelize.authenticate()
 .then(() => {
-    console.log('A connection has been established');
+    console.log('A connection to the database has been established');
 }).catch(() => {
     console.log('Database not found');
 })
@@ -30,25 +30,25 @@ const Card = sequelize.define('card', {
     quantity: { type: Sequelize.INTEGER }
 });
 
-Card.sync({ force: true })
-.then(() => {
-    return Card.create({
-        isFlip: false,
-        color: 'W',
-        rarity: 'R',
-        title: 'Rule of Law',
-        setCode: 'RNA',
-        price: 15.66,
-        quantity: 3
-    });
-}).then(() => {
-    Card.findAll()
-    .then((card) => {
-        console.log(card);
-    }).catch((error) => {
-        console.log(error);
-    })
-})
+// Card.sync({ force: true })
+// .then(() => {
+//     return Card.create({
+//         isFlip: false,
+//         color: 'W',
+//         rarity: 'R',
+//         title: 'Rule of Law',
+//         setCode: 'RNA',
+//         price: 15.66,
+//         quantity: 3
+//     });
+// }).then(() => {
+//     Card.findAll()
+//     .then((card) => {
+//         console.log(card);
+//     }).catch((error) => {
+//         console.log(error);
+//     })
+// })
 
 
 let serviceAccount = require(__dirname + '/../keys/rainy-day-games-searcher-firebase-adminsdk-z7jgg-efcf1425fb.json');
@@ -76,8 +76,9 @@ async function removeAllCards() {
  */
 async function createCard(card) {
     // Add a timestamp to the card object
-    card.timestamp = moment().unix();
-    return await db.ref('cards').push(card);
+    // card.timestamp = moment().unix();
+    // return await db.ref('cards').push(card);
+    await Card.create(card);
 }
 
 /**
@@ -126,22 +127,9 @@ async function updateCard(card) {
  * @returns Returns object or `null` for not found
  */
 async function getCardByTitle(title) {
-    let cards = [];
-    
-    await db.ref('cards')
-    .orderByChild('title')
-    .equalTo(title)
-    .once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            let myCard
-            myCard = childSnapshot.val();
-            myCard.key = childSnapshot.key;
-            cards.push(myCard);
-        });
+    return Card.findAll({
+        where: { title: title }
     });
-
-    if (cards.length === 0) throw new Error('Card was not found');
-    else return cards;
 }
 
 /**
