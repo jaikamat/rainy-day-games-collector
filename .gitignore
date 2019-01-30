@@ -4,3 +4,6 @@ server/keys
 # Ignore node modules
 server/node_modules
 client/node_modules
+
+#Ignore sqlite3 database
+server/cardsDatabase.db
