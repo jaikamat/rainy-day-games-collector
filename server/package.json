@@ -15,7 +15,6 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "firebase-admin": "^6.4.0",
-    "moment": "^2.23.0",
     "morgan": "^1.9.1",
     "node-fetch": "^2.3.0",
     "sequelize": "^4.42.0",

@@ -1,5 +1,4 @@
 const firebase = require('firebase-admin');
-const moment = require('moment');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('database', 'username', 'password', {
