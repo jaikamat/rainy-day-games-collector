@@ -1,5 +1,5 @@
 const scrape = require('../database/scrape');
-const database = require('../database/database');
+const database = require('../database/controllers/card');
 const express = require('express');
 const router = express.Router();
 
