@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const sequelize = require('../initializedb').sequelize;
+const sequelize = require('../initializedb');
 
 const Card = sequelize.define('card', {
     isFlip: { type: Sequelize.BOOLEAN },
@@ -11,4 +11,4 @@ const Card = sequelize.define('card', {
     quantity: { type: Sequelize.INTEGER }
 });
 
-module.exports.Card = Card;
+module.exports = Card;

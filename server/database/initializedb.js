@@ -18,4 +18,4 @@ sequelize.authenticate()
     console.log('Database not found');
 });
 
-module.exports.sequelize = sequelize;
+module.exports = sequelize;

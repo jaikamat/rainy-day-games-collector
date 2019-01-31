@@ -1,4 +1,4 @@
-const Card = require('../models/card').Card;
+const Card = require('../models/card');
 
 /**
  * Writes a card object to sqlite3
