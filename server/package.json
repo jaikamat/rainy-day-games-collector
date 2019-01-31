@@ -12,11 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
-    "firebase-admin": "^6.4.0",
+    "express-session": "^1.15.6",
     "morgan": "^1.9.1",
     "node-fetch": "^2.3.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "sequelize": "^4.42.0",
     "sqlite3": "^4.0.6",
     "swig": "^1.4.2"
