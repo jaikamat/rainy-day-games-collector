@@ -2,19 +2,30 @@ const express = require('express');
 const cardRoutes = require('./routes/cards')
 const swig = require('swig')
 const app = express();
+const passport = require('passport');
+const session = require('express-session');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const PORT = 1337;
 
-// server code
-app.set('view engine', 'html');
 
+app.set('view engine', 'html');
 app.set('view options', {
     layout: false
 });
 
-app.set('views', __dirname + "/views");
+app.set('views', __dirname + "/views"); // Public file service
 app.engine('html', swig.renderFile);
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({ extended: true })); // Attached parsed incoming request body to req.body
+app.use(bodyParser.json()); // Parses body to JSON
+app.use(session({
+    secret: 'Qd4p!jk23$601#',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/', express.static(__dirname + '/public'));
 
 
