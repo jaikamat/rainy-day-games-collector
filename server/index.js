@@ -1,5 +1,6 @@
 const express = require('express');
-const cardRoutes = require('./routes/cards')
+const cardRoutes = require('./routes/cards');
+const authRoutes = require('./routes/auth');
 const swig = require('swig')
 const app = express();
 const passport = require('passport');
@@ -33,6 +34,7 @@ app.listen(PORT, () => {
     console.log('Server is listening on port ' + PORT);
 })
 
+app.use('/auth', authRoutes);
 app.use('/cards', cardRoutes);
 
 // GET request for the home page

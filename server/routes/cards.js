@@ -8,10 +8,7 @@ router.get('/', (req, res) => {
     database.getAllCards().then((cards) => {
         // scrape.getCards().then((cards) => {
         res.status(200);
-        res.render('cards.html', {
-            cards: cards,
-            total: cards.length
-        })
+        res.send(cards);
     }).catch((error) => {
         res.status(500);
         res.send('ERROR MESSAGE!')

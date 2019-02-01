@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+// const models = require('./models');
 
 const sequelize = new Sequelize('database', 'username', 'password', {
     host: 'localhost',
@@ -17,5 +18,12 @@ sequelize.authenticate()
 }).catch(() => {
     console.log('Database not found');
 });
+
+// models.sequelize.sync()
+// .then(() => {
+//     console.log('Database models are fine');
+// }).catch((error) => {
+//     console.log(arror);
+// })
 
 module.exports = sequelize;
