@@ -11,4 +11,11 @@ const Card = sequelize.define('card', {
     quantity: { type: Sequelize.INTEGER }
 });
 
+Card.sequelize.sync()
+.then(() => {
+    console.log('Cards table synced');
+}).catch((error) => {
+    console.log('There was an error syncing the Cards table')
+});
+
 module.exports = Card;

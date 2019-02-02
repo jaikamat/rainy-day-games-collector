@@ -29,4 +29,11 @@ const User = sequelize.define('user', {
     }
 });
 
+User.sequelize.sync()
+.then(() => {
+    console.log('Users table synced');
+}).catch((error) => {
+    console.log('There was an error syncing the Users table')
+});
+
 module.exports = User;
