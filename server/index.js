@@ -122,6 +122,10 @@ app.post('/signup', passport.authenticate('signup-local', {
     failureRedirect: '/login'
 }));
 
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/login');
+});
 
 app.use('/cards', cardRoutes);
 
