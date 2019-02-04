@@ -3,6 +3,24 @@ const database = require('../database/controllers/card');
 const express = require('express');
 const router = express.Router();
 
+// User auth middleware, req.isAuthenticated is added by passportjs
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.send('THIS ROUTE IS FORBIDDEN');
+    }
+};
+
+// User auth middleware, checks for isAdmin property on req.user
+const isAdmin = (req, res, next) => {
+    if (req.isAuthenticated() && req.user.isAdmin) {
+        return next();
+    } else {
+        res.send('THIS ROUTE IS FORBIDDEN - NO ADMIN');
+    }
+};
+
 // Remember: The GET url to access this is '/cards'
 router.get('/', (req, res) => {
     database.getAllCards().then((cards) => {

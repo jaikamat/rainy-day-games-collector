@@ -27,6 +27,10 @@ const User = sequelize.define('user', {
     status: {
         type: Sequelize.ENUM('active', 'inactive'),
         defaultValue: 'active'
+    },
+    isAdmin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 }, {
     hooks: {
@@ -46,7 +50,13 @@ User.sequelize.sync({ force: true })
 .then(() => {
     User.create({
         username: 'Jai',
-        password: 'testing123'
+        password: 'testing123',
+        isAdmin: true
+    });
+    User.create({
+        username: 'Julie',
+        password: 'testing123',
+        isAdmin: false
     });
     console.log('Users table synced');
 }).catch((error) => {
