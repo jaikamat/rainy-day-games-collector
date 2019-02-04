@@ -9,4 +9,4 @@ client/node_modules
 server/cardsDatabase.db
 
 #Ignore seed files
-server/database/seed
+server/database/seed.js
