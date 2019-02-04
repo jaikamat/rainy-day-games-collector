@@ -104,10 +104,18 @@ passport.use('login-local', new LocalStrategy({
     })
 }));
 
+app.get('/login', (req, res) => {
+    res.send('LOGIN PAGE HERE');
+});
+
 app.post('/login', passport.authenticate('login-local', {
     successRedirect: '/cards',
     failureRedirect: '/login'
 }));
+
+app.get('/signup', (req, res) => {
+    res.send('SIGNUP PAGE HERE');
+});
 
 app.post('/signup', passport.authenticate('signup-local', {
     successRedirect: '/cards',
