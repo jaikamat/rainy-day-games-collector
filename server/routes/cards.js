@@ -1,5 +1,6 @@
 const scrape = require('../database/scrape');
-const database = require('../database/controllers/card');
+const cardController = require('../database/controllers/card');
+const userCardController = require('../database/controllers/userCard');
 const express = require('express');
 const router = express.Router();
 
@@ -27,7 +28,7 @@ const isAdmin = (req, res, next) => {
 
 // Remember: The GET url to access this is '/cards'
 router.get('/', (req, res) => {
-    database.getAllCards().then((cards) => {
+    cardController.getAllCards().then((cards) => {
         // scrape.getCards().then((cards) => {
         res.status(200);
         res.send(cards);
@@ -39,7 +40,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/paginate', (req, res) => {
-    database.getCardsPaginated()
+    cardController.getCardsPaginated()
     .then((cards) => {
         res.status(200);
         res.render('cards.html', {
@@ -53,7 +54,7 @@ router.get('/paginate', (req, res) => {
 });
 
 router.post('/update-collection', isAdmin, (req, res) => {
-    Promise.all([scrape.getCards(), database.getAllCards()])
+    Promise.all([scrape.getCards(), cardController.getAllCards()])
     .then((cards) => {
         let newCards = cards[0];
         let oldCards = cards[1];
@@ -69,13 +70,13 @@ router.post('/update-collection', isAdmin, (req, res) => {
             if (index >= 0) { // Card was found
                 if (newCards[i].quantity !== oldCards[index].quantity) { // Check for changes in quantity
                     newProduct.push(newCards[i]);
-                    database.updateCard(newCards[i]);
+                    cardController.updateCard(newCards[i]);
                 }
                 oldCards.splice(index, 1); // Remove the card from the array to increase speed
 
             } else if (index === -1) { // If the index is not found, then add card to db
                 newProduct.push(newCards[i]);
-                database.createCard(newCards[i]);
+                cardController.createCard(newCards[i]);
             }
         }
         res.status(200);
@@ -90,7 +91,7 @@ router.post('/update-collection', isAdmin, (req, res) => {
 });
 
 router.get('/search', (req, res) => {
-    database.getCardByTitle(req.query.title)
+    cardController.getCardByTitle(req.query.title)
     .then((card) => {
         console.log('searched card sent');
         console.log(card);
@@ -105,7 +106,7 @@ router.get('/search', (req, res) => {
 
 router.post('/update-card', isAdmin, (req, res) => {
     console.log(req.query);
-    database.updateCard(req.query)
+    cardController.updateCard(req.query)
     .then((card) => {
         res.status(200);
         res.send(card);
@@ -120,7 +121,7 @@ router.post('/seed', isAdmin, (req, res) => {
     scrape.getCards().then((cards) => {
         //TODO: This needs to be a function that is wrapped in a promise
         cards.forEach((card) => {
-            database.createCard(card);
+            cardController.createCard(card);
         });
     }).then(() => {
         res.status(200);
@@ -133,7 +134,7 @@ router.post('/seed', isAdmin, (req, res) => {
 });
 
 router.post('/wishlist', isAuthenticated, (req, res) => {
-    database.addCardToWishlist(req.user.user_id, req.body.card_id)
+    userCardController.addCardToWishlist(req.user.user_id, req.body.card_id)
     .then((createdUserCard) => {
         res.status(200);
         res.send(createdUserCard);
@@ -145,7 +146,7 @@ router.post('/wishlist', isAuthenticated, (req, res) => {
 });
 
 router.get('/wishlist', isAuthenticated, (req, res) => {
-    database.getWishlist(req.user.user_id)
+    userCardController.getWishlist(req.user.user_id)
     .then((data) => {
         let cards = data.map(el => el.card);
         res.status(200);
@@ -158,7 +159,7 @@ router.get('/wishlist', isAuthenticated, (req, res) => {
 });
 
 router.delete('/wishlist', isAuthenticated, (req, res) => {
-    database.deleteCardFromWishlist(req.user.user_id, req.body.card_id)
+    userCardController.deleteCardFromWishlist(req.user.user_id, req.body.card_id)
     .then((affectedRows) => {
         if (affectedRows > 0) {
             res.sendStatus(204);

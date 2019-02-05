@@ -88,7 +88,6 @@ const LocalStrategy = require('passport-local').Strategy;
 passport.use('signup-local', new LocalStrategy({
     passReqToCallback: true
 }, (req, username,password, done) => {
-    console.log('INSIDE SIGNUP LOCAL METHOD')
     models.user.findOne({
         where: { username: username }
     }).then((user) => {
