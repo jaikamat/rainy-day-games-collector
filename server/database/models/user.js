@@ -2,7 +2,7 @@ const bCrypt = require('bcrypt-nodejs');
 
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define('user', {
-        id: {
+        user_id: {
             autoIncrement: true,
             primaryKey: true,
             type: Sequelize.INTEGER
@@ -39,11 +39,16 @@ module.exports = (sequelize, Sequelize) => {
             }
         }
     });
-    
+
+    // Create associations
+    User.associate = (models) => {
+        User.belongsToMany(models.card, { through: models.userCard });
+    };
+
     // Cannot use an arrow function here due to `this` binding errors on model instance
     User.prototype.validPassword = function(password) {
         return bCrypt.compareSync(password, this.password);
     };
-    
+
     return User;
 };

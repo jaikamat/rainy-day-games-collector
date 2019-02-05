@@ -9,7 +9,10 @@ const sequelize = new Sequelize('database', 'username', 'password', {
         min: 0,
         idle: 10000
     },
-    storage: './cardsDatabase.db'
+    storage: './cardsDatabase.db',
+    define: {
+        freezeTableName: true // This prevents pluralization confusion on model references and in sqlite CLI
+    }
 });
 
 // Create db object for easy export
@@ -26,8 +29,11 @@ fs.readdirSync(__dirname)
 });
 
 // Create table associations
-db.user.hasOne(db.wishlist);
-db.wishlist.belongsTo(db.user);
+Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
+    }
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -21,15 +21,20 @@ models.sequelize.sync({ force: true })
         password: 'testing123',
         isAdmin: true
     });
-    models.user.create({
+    return models.user.create({
         username: 'Julie',
         password: 'testing123',
         isAdmin: false
     });
 }).then(() => {
-    Promise.all(seed.cardData.map((card) => {
+    return Promise.all(seed.cardData.map((card) => {
         return models.card.create(card);
     }));
+}).then(() => {
+    return models.userCard.create({
+        user_id: 1,
+        card_id: 12
+    });
 }).catch((error) => {
     console.log(error);
 });
