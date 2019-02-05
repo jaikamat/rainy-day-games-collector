@@ -12,8 +12,10 @@ const sequelize = new Sequelize('database', 'username', 'password', {
     storage: './cardsDatabase.db'
 });
 
+// Create db object for easy export
 let db = {};
 
+// Iterate through model files and add them to the db object
 fs.readdirSync(__dirname)
 .filter((file) => {
     return (file.indexOf('.')!== 0) && (file !== 'index.js');
@@ -23,11 +25,9 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
 });
 
-Object.keys(db).forEach((modelName) => {
-    if ('associate' in db[modelName]) {
-        db[modelName].associate(db);
-    }
-});
+// Create table associations
+db.user.hasOne(db.wishlist);
+db.wishlist.belongsTo(db.user);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
