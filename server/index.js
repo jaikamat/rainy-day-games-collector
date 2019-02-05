@@ -6,9 +6,33 @@ const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const User = require('./database/models/user');
+const models = require('./database/models');
 const PORT = 1337;
 
+const seed = require('./database/seed');
+
+
+models.sequelize.sync({ force: true })
+.then(() => {
+    console.log('Database models are fine');
+}).then(() => {
+    models.user.create({
+        username: 'Jai',
+        password: 'testing123',
+        isAdmin: true
+    });
+    models.user.create({
+        username: 'Julie',
+        password: 'testing123',
+        isAdmin: false
+    });
+}).then(() => {
+    Promise.all(seed.cardData.map((card) => {
+        return models.card.create(card);
+    }));
+}).catch((error) => {
+    console.log(error);
+});
 
 app.set('view engine', 'html');
 app.set('view options', {
@@ -42,7 +66,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findById(id)
+    models.user.findById(id)
     .then((user) => {
         done(null, user);
     }).catch((error) => {
@@ -56,7 +80,7 @@ passport.use('signup-local', new LocalStrategy({
     passReqToCallback: true
 }, (req, username,password, done) => {
     console.log('INSIDE SIGNUP LOCAL METHOD')
-    User.findOne({
+    models.user.findOne({
         where: { username: username }
     }).then((user) => {
         if (user) {
@@ -68,7 +92,7 @@ passport.use('signup-local', new LocalStrategy({
                 username: username,
                 password: password
             };
-            return User.create(data);
+            return models.user.create(data);
         }
     }).then((createdUser) => {
         if (!createdUser) {
@@ -87,7 +111,7 @@ passport.use('signup-local', new LocalStrategy({
 passport.use('login-local', new LocalStrategy({
     passReqToCallback: true
 }, (req, username, password, done) => {
-    User.findOne({
+    models.user.findOne({
         where: { username: username }
     }).then((user) => {
         if (!user) {
