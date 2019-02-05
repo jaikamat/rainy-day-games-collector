@@ -3,7 +3,9 @@ const database = require('../database/controllers/card');
 const express = require('express');
 const router = express.Router();
 
-// User auth middleware, req.isAuthenticated is added by passportjs
+/**
+ * User auth middleware, req.isAuthenticated is added by passportjs 
+ */
 const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
@@ -12,7 +14,9 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-// User auth middleware, checks for isAdmin property on req.user
+/**
+ * User auth middleware, checks for isAdmin property on req.user 
+ */
 const isAdmin = (req, res, next) => {
     if (req.isAuthenticated() && req.user.isAdmin) {
         return next();
@@ -45,11 +49,10 @@ router.get('/paginate', (req, res) => {
         res.status(500);
         res.send('ERROR MESSAGE!')
         console.log(error);
-    })
+    });
 });
 
-// TODO: THIS MUST BE IMPLEMENTED AS A POST REQUEST
-router.get('/update-collection', (req, res) => {
+router.post('/update-collection', isAdmin, (req, res) => {
     Promise.all([scrape.getCards(), database.getAllCards()])
     .then((cards) => {
         let newCards = cards[0];
@@ -83,13 +86,8 @@ router.get('/update-collection', (req, res) => {
         res.status(500);
         res.send('ERROR MESSAGE!')
         console.log(error);
-    })
-})
-
-// when "update cards" is pressed, need to return new product
-// add "new" badge to new product divs and sort by new
-// add cards to firebase
-// TODO: need to update the new card/updated card's updateDate
+    });
+});
 
 router.get('/search', (req, res) => {
     database.getCardByTitle(req.query.title)
@@ -105,7 +103,7 @@ router.get('/search', (req, res) => {
     });
 });
 
-router.get('/update-card', (req, res) => {
+router.post('/update-card', isAdmin, (req, res) => {
     console.log(req.query);
     database.updateCard(req.query)
     .then((card) => {
@@ -118,37 +116,7 @@ router.get('/update-card', (req, res) => {
     });
 });
 
-router.get('/new-product', (req, res) => {
-    // Grabs the new card list from RDG, and the old cards in Firebase
-    Promise.all([scrape.getCards(), database.getAllCards()])
-    .then((cards) => {
-        let newCards = cards[0];
-        let oldCards = cards[1];
-        let newProduct = [];
-
-        newCards.forEach((newCard) => {
-            oldCards.forEach((oldCard) => {
-                if (newCard.title === oldCard.title 
-                    && newCard.quantity > oldCard.quantity
-                    && newCard.setCode === oldCard.setCode
-                    && newCard.rarity === oldCard.rarity) {
-                    newProduct.push(newCard);
-                }
-            })
-        });
-
-        // make sure to write the new product to the DB once this actually works
-        res.render('cards.html', {
-            cards: newProduct
-        });
-    }).catch((err) => {
-        res.status(500);
-        res.send('ERROR MESSAGE!')
-        console.log(err);
-    })
-});
-
-router.get('/seed', (req, res) => {
+router.post('/seed', isAdmin, (req, res) => {
     scrape.getCards().then((cards) => {
         //TODO: This needs to be a function that is wrapped in a promise
         cards.forEach((card) => {
@@ -161,7 +129,7 @@ router.get('/seed', (req, res) => {
         res.status(500);
         res.send('ERROR MESSAGE!')
         console.log(err);
-    })
+    });
 });
 
 router.post('/wishlist', isAuthenticated, (req, res) => {
@@ -179,9 +147,7 @@ router.post('/wishlist', isAuthenticated, (req, res) => {
 router.get('/wishlist', isAuthenticated, (req, res) => {
     database.getWishlist(req.user.user_id)
     .then((data) => {
-        let cards = data.map((el) => {
-            return el.card;
-        });
+        let cards = data.map(el => el.card);
         res.status(200);
         res.send(cards);
     }).catch((error) => {
@@ -204,6 +170,6 @@ router.delete('/wishlist', isAuthenticated, (req, res) => {
         res.send('COULD NOT DELETE WISHLIST');
         console.log(error);
     });
-})
+});
 
 module.exports = router;

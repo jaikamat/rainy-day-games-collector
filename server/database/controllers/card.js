@@ -2,7 +2,7 @@ const Card = require('../models').card;
 const UserCard = require('../models').userCard;
 
 /**
- * Writes a card object to sqlite3
+ * Writes a card object to the card table
  * @param {Object} card The card object to create
  * @returns Nothing
  */
@@ -11,7 +11,7 @@ async function createCard(card) {
 }
 
 /**
- * Updates a card's `quantity` in sqlite3
+ * Updates a card's `quantity` in the card table
  * @param {Object} card The card object with desired properties
  * @returns The affected card record
  */
@@ -50,7 +50,7 @@ async function updateCard(card) {
 
 /**
  // TODO: Possibly have this method be more modular and take more search params
- * Queries Firebase for a card by title
+ * Queries the card table for a card by title
  * @param {String} title The case sensitive card title
  * @returns Returns an array of values
  */
@@ -61,7 +61,7 @@ async function getCardByTitle(title) {
 }
 
 /**
- * Retrieves all the cards stored in sqlite3
+ * Retrieves all the cards stored in database instance
  * @returns Returns an array of card objects
  */
 async function getAllCards() {
@@ -73,17 +73,28 @@ async function getCardsPaginated(childProperty, key, sortBy) {
     // TODO: re-code this with updatedAt and title sort
 }
 
+/**
+ * Retrieves all cards in the userCard table assigned to a user
+ * @param {Integer} userId 
+ * @returns userCard objects with cards populated
+ */
 async function getWishlist(userId) {
     return await UserCard.findAll({
         where: {
             user_id: userId
         },
         include: [{
-            model: Card
+            model: Card // Populates the card table data to the result
         }]
     });
 }
 
+/**
+ * Creates a userCard record tying a user to a card in their wishlist
+ * @param {Integer} userId
+ * @param {Integer} cardId
+ * @returns The created record
+ */
 async function addCardToWishlist(userId, cardId) {
     return await UserCard.create({
         user_id: userId,
@@ -91,6 +102,11 @@ async function addCardToWishlist(userId, cardId) {
     });
 }
 
+/**
+ * Removes a record from the userCard table
+ * @param {Integer} userId
+ * @param {Integer} cardId
+ */
 async function deleteCardFromWishlist(userId, cardId) {
     return await UserCard.destroy({
         where: {
