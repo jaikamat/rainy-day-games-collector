@@ -164,4 +164,46 @@ router.get('/seed', (req, res) => {
     })
 });
 
+router.post('/wishlist', isAuthenticated, (req, res) => {
+    database.addCardToWishlist(req.user.user_id, req.body.card_id)
+    .then((createdUserCard) => {
+        res.status(200);
+        res.send(createdUserCard);
+    }).catch((error) => {
+        res.status(500);
+        res.send('WISHLIST CARD NOT CREATED');
+        console.log(error);
+    });
+});
+
+router.get('/wishlist', isAuthenticated, (req, res) => {
+    database.getWishlist(req.user.user_id)
+    .then((data) => {
+        let cards = data.map((el) => {
+            return el.card;
+        });
+        res.status(200);
+        res.send(cards);
+    }).catch((error) => {
+        res.status(500);
+        res.send('COULD NOT GET WISHLIST');
+        console.log(error);
+    });
+});
+
+router.delete('/wishlist', isAuthenticated, (req, res) => {
+    database.deleteCardFromWishlist(req.user.user_id, req.body.card_id)
+    .then((affectedRows) => {
+        if (affectedRows > 0) {
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(400); // If no rows were affected, it was a bad request
+        }
+    }).catch((error) => {
+        res.status(500);
+        res.send('COULD NOT DELETE WISHLIST');
+        console.log(error);
+    });
+})
+
 module.exports = router;

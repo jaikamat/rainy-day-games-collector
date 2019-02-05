@@ -31,6 +31,10 @@ models.sequelize.sync({ force: true })
         return models.card.create(card);
     }));
 }).then(() => {
+    models.userCard.create({
+        user_id: 1,
+        card_id: 6
+    });
     return models.userCard.create({
         user_id: 1,
         card_id: 12
@@ -67,7 +71,7 @@ app.listen(PORT, () => {
 // Passport configuration
 // TODO: modularize this and remove it into separate files
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.user_id);
 });
 
 passport.deserializeUser((id, done) => {

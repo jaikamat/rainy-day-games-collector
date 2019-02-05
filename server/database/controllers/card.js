@@ -1,4 +1,5 @@
 const Card = require('../models').card;
+const UserCard = require('../models').userCard;
 
 /**
  * Writes a card object to sqlite3
@@ -72,8 +73,38 @@ async function getCardsPaginated(childProperty, key, sortBy) {
     // TODO: re-code this with updatedAt and title sort
 }
 
+async function getWishlist(userId) {
+    return await UserCard.findAll({
+        where: {
+            user_id: userId
+        },
+        include: [{
+            model: Card
+        }]
+    });
+}
+
+async function addCardToWishlist(userId, cardId) {
+    return await UserCard.create({
+        user_id: userId,
+        card_id: cardId
+    });
+}
+
+async function deleteCardFromWishlist(userId, cardId) {
+    return await UserCard.destroy({
+        where: {
+            user_id: userId,
+            card_id: cardId
+        }
+    });
+}
+
 module.exports.getCardByTitle = getCardByTitle;
 module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
 module.exports.getCardsPaginated = getCardsPaginated;
+module.exports.addCardToWishlist = addCardToWishlist;
+module.exports.getWishlist = getWishlist;
+module.exports.deleteCardFromWishlist = deleteCardFromWishlist;
