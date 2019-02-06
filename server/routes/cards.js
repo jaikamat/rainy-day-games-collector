@@ -93,8 +93,6 @@ router.post('/update-collection', isAdmin, (req, res) => {
 router.get('/search', (req, res) => {
     cardController.getCardByTitle(req.query.title)
     .then((card) => {
-        console.log('searched card sent');
-        console.log(card);
         res.status(200);
         res.send(card);
     }).catch((error) => {
@@ -117,15 +115,14 @@ router.post('/update-card', isAdmin, (req, res) => {
     });
 });
 
+// TODO: This function takes a while to execute in sqlite3.
+// Write some frontend functionality to show the user progress
 router.post('/seed', isAdmin, (req, res) => {
     scrape.getCards().then((cards) => {
-        //TODO: This needs to be a function that is wrapped in a promise
-        cards.forEach((card) => {
-            cardController.createCard(card);
-        });
-    }).then(() => {
+        return Promise.all(cards.map(card => cardController.createCard(card)));
+    }).then((cards) => {
         res.status(200);
-        res.send('Scrape & Seed Completed');
+        res.send('Scrape and seed complete!');
     }).catch((err) => {
         res.status(500);
         res.send('ERROR MESSAGE!')
