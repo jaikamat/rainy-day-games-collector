@@ -1,25 +1,26 @@
-const models = require('../database/models');
+const User = require('../database/models').user;
 
 let passportConfig = {};
 
 passportConfig.signupLocal = (req, username,password, done) => {
-    models.user.findOne({
+    User.findOne({
         where: { username: username }
     }).then((user) => {
         if (user) {
             return done(null, false, {
                 message: 'That username is already taken'
-            })
+            });
         } else {
             const data = {
                 username: username,
                 password: password
             };
-            return models.user.create(data);
+            return User.create(data);
         }
     }).then((createdUser) => {
         if (!createdUser) {
-            console.log('User was not created...');
+            console.log(createdUser);
+            console.log('User was not created');
             return done(null, false);
         }
         if (createdUser) {
@@ -32,7 +33,7 @@ passportConfig.signupLocal = (req, username,password, done) => {
 };
 
 passportConfig.loginLocal = (req, username, password, done) => {
-    models.user.findOne({
+    User.findOne({
         where: { username: username }
     }).then((user) => {
         if (!user) {
@@ -54,7 +55,7 @@ passportConfig.serialize = (user, done) => {
 };
 
 passportConfig.deserialize = (id, done) => {
-    models.user.findById(id)
+    User.findById(id)
     .then((user) => {
         done(null, user);
     }).catch((error) => {
