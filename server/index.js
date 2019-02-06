@@ -1,5 +1,6 @@
 const express = require('express');
 const cardRoutes = require('./routes/cards');
+const userRoutes = require('./routes/users');
 const swig = require('swig')
 const app = express();
 const passport = require('passport');
@@ -34,6 +35,10 @@ models.sequelize.sync({ force: true })
     models.userCard.create({
         user_id: 1,
         card_id: 6
+    });
+    models.userCard.create({
+        user_id: 2,
+        card_id: 8
     });
     return models.userCard.create({
         user_id: 1,
@@ -82,6 +87,7 @@ const authRoutes = require('./routes/auth')(passport);
 // Assign routes
 app.use('/auth', authRoutes);
 app.use('/cards', cardRoutes);
+app.use('/users', userRoutes);
 
 // GET request for the home page
 app.get('/', (req, res) => {
@@ -99,10 +105,11 @@ app.use('/', (req, res, next) => {
 // Error handling middleware
 // Takes in error objects thrown and passed with next()
 // and renders an error page
-app.use((err, req, res, next) => {
+app.use((error, req, res, next) => {
+    console.log('Inside error middleware');
     // If the status is not previously set, make it 500
-    res.status(err.status || 500);
-    res.render('error.html');
+    res.status(error.status || 500);
+    res.send(error.message)
     // Do I need to call next() here?
     // next();
 });
