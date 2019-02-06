@@ -7,6 +7,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const models = require('./database/models');
+const passportConfig = require('./passport/config');
 const PORT = 1337;
 
 const seed = require('./database/seed');
@@ -69,72 +70,18 @@ app.listen(PORT, () => {
 })
 
 // Passport configuration
-// TODO: modularize this and remove it into separate files
-passport.serializeUser((user, done) => {
-    done(null, user.user_id);
-});
-
-passport.deserializeUser((id, done) => {
-    models.user.findById(id)
-    .then((user) => {
-        done(null, user);
-    }).catch((error) => {
-        console.log(error)
-    });
-});
+passport.serializeUser(passportConfig.serialize);
+passport.deserializeUser(passportConfig.deserialize);
 
 const LocalStrategy = require('passport-local').Strategy;
 
 passport.use('signup-local', new LocalStrategy({
     passReqToCallback: true
-}, (req, username,password, done) => {
-    models.user.findOne({
-        where: { username: username }
-    }).then((user) => {
-        if (user) {
-            return done(null, false, {
-                message: 'That username is already taken'
-            })
-        } else {
-            const data = {
-                username: username,
-                password: password
-            };
-            return models.user.create(data);
-        }
-    }).then((createdUser) => {
-        if (!createdUser) {
-            console.log('User was not created...');
-            return done(null, false);
-        }
-        if (createdUser) {
-            console.log('User was created! Success!');
-            return done(null, createdUser)
-        }
-    }).catch((error) => {
-        console.log(error);
-    });
-}));
+}, passportConfig.signupLocal));
 
 passport.use('login-local', new LocalStrategy({
     passReqToCallback: true
-}, (req, username, password, done) => {
-    models.user.findOne({
-        where: { username: username }
-    }).then((user) => {
-        if (!user) {
-            console.log('User was not found with username ' + username);
-            return done(null, false);
-        } 
-        if (!user.validPassword(password)) {
-            console.log('Password was not valid with user ' + user);
-            return done(null, false);
-        }
-        return done(null, user);
-    }).catch((error) => {
-        console.log(error);
-    })
-}));
+}, passportConfig.loginLocal));
 
 const authRoutes = require('./routes/auth')(passport);
 
