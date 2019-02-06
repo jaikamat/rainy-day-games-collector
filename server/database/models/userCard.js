@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize) => {
 
     // Create associations
     UserCard.associate = (models) => {
-        UserCard.belongsTo(models.user, { foreignKey: 'user_id' });
+        UserCard.belongsTo(models.user, { foreignKey: 'user_id', onDelete: 'cascade' });
         UserCard.belongsTo(models.card, { foreignKey: 'card_id' });
     };
     
