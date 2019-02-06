@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             type: Sequelize.INTEGER,
             references: {
-                model: 'user', // Note: Counterintuitive, but this must be pluralized
+                model: 'user',
                 key: 'user_id'
             }
         },
@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             type: Sequelize.INTEGER,
             references: {
-                model: 'card', // Note: Counterintuitive, but this must be pluralized
+                model: 'card',
                 key: 'card_id'
             }
         }

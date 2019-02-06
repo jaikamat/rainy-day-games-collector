@@ -22,11 +22,23 @@ async function getWishlist(userId) {
  * @param {Integer} userId
  * @param {Integer} cardId
  * @returns The created record
+ * NOTE: findOrCreate is broken using sqlite3 for some reason...
  */
 async function addCardToWishlist(userId, cardId) {
-    return await UserCard.create({
-        user_id: userId,
-        card_id: cardId
+    return await UserCard.find({
+        where: {
+            user_id: userId,
+            card_id: cardId
+        }
+    }).then((found) => {
+        if (!found) {
+            return UserCard.create({
+                user_id: userId,
+                card_id: cardId
+            });
+        } else {
+            throw new Error('Card already exists in wishlist');
+        }
     });
 }
 

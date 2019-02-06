@@ -137,7 +137,7 @@ router.post('/wishlist', isAuthenticated, (req, res) => {
         res.send(createdUserCard);
     }).catch((error) => {
         res.status(500);
-        res.send('WISHLIST CARD NOT CREATED');
+        res.send(error.message);
         console.log(error);
     });
 });
