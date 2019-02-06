@@ -9,10 +9,9 @@ const morgan = require('morgan');
 const models = require('./database/models');
 const passportConfig = require('./passport/config');
 const PORT = 1337;
-
 const seed = require('./database/seed');
 
-
+ // Sync models to database and seed data for development
 models.sequelize.sync({ force: true })
 .then(() => {
     console.log('Database models are fine');
@@ -44,15 +43,14 @@ models.sequelize.sync({ force: true })
     console.log(error);
 });
 
+
 app.set('view engine', 'html');
-app.set('view options', {
-    layout: false
-});
+app.set('view options', { layout: false });
 
 app.set('views', __dirname + "/views"); // Public file service
 app.engine('html', swig.renderFile);
 app.use(morgan('combined'));
-app.use(bodyParser.urlencoded({ extended: true })); // Attached parsed incoming request body to req.body
+app.use(bodyParser.urlencoded({ extended: true })); // Attaches parsed incoming request body to req.body
 app.use(bodyParser.json()); // Parses body to JSON
 
 app.use(session({
@@ -67,7 +65,7 @@ app.use('/', express.static(__dirname + '/public'));
 
 app.listen(PORT, () => {
     console.log('Server is listening on port ' + PORT);
-})
+});
 
 // Passport configuration
 passport.serializeUser(passportConfig.serialize);
@@ -75,16 +73,13 @@ passport.deserializeUser(passportConfig.deserialize);
 
 const LocalStrategy = require('passport-local').Strategy;
 
-passport.use('signup-local', new LocalStrategy({
-    passReqToCallback: true
-}, passportConfig.signupLocal));
-
-passport.use('login-local', new LocalStrategy({
-    passReqToCallback: true
-}, passportConfig.loginLocal));
+// Configure strategies
+passport.use('signup-local', new LocalStrategy({ passReqToCallback: true }, passportConfig.signupLocal));
+passport.use('login-local', new LocalStrategy({ passReqToCallback: true }, passportConfig.loginLocal));
 
 const authRoutes = require('./routes/auth')(passport);
 
+// Assign routes
 app.use('/auth', authRoutes);
 app.use('/cards', cardRoutes);
 
