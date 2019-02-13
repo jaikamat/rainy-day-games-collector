@@ -21,7 +21,7 @@ function loginUser(permission) {
         userInfo.username = 'Julie';
         userInfo.password = 'testing123'
     }
-    
+
     return function(done) {
         api.post('/auth/login')
         .send(userInfo)
@@ -29,6 +29,13 @@ function loginUser(permission) {
         .then(() => {
             done()
         }, done);
+    }
+}
+
+function logoutUser() {
+    return function(done) {
+        api.get('/auth/logout')
+        .expect(302, done);
     }
 }
 
@@ -81,35 +88,81 @@ describe('Admin Access', function() {
             done();
         }, done);
     });
-
-    // TODO: Implement this route to return something sane on logout
-    // after(function(done) {
-    //     api.get('/auth.logout')
-    //     .then(response => {
-    //         console.log(response);
-    //         done();
-    //     })
-    // });
-
-    /** 
-     * TODO:
-     *     Test regular user walkthrough
-     *     - log in
-     *     - view cards
-     *     - add card to wishlist
-     *     - confirm added card
-     *     - delete card from wishlist
-     *     - confirm deletion
-     * 
-     *     Test admin walkthrough
-     *     - log in
-     *     - view users
-     *     - delete user
-     *     - confirm deletion
-     *     - change user username
-     *     - confirm change
-     *     - view cards
-     *     - change card qty
-     *     - confirm card change qty
-     */
 });
+
+describe('User walkthrough', function() {
+    before(loginUser('user'));
+    after(logoutUser());
+    
+    it('shold be able to view all cards', function(done) {
+        api.get('/cards')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.length, 28);
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should add a card to their wishlist', function(done) {
+        api.post('/cards/wishlist')
+        .send({
+            card_id: 7
+        })
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.card_id, 7)
+        }).then(() => {
+            done();
+        }, done)
+    });
+
+    it('should show the added card in their wishlist', function(done) {
+        api.get('/cards/wishlist')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.length, 2);
+            assert.equal(response.body[0].card_id, 8);
+            assert.equal(response.body[1].card_id, 7);
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should delete a card in their wishlist', function(done) {
+        api.delete('/cards/wishlist')
+        .send({
+            card_id: 8
+        })
+        .expect(204, done);
+    });
+
+    it('should show the card was deleted from their wishlist', function(done) {
+        api.get('/cards/wishlist')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.length, 1);
+            assert.equal(response.body[0].card_id, 7);
+        }).then(() => {
+            done();
+        }, done);
+    });
+});
+
+/** 
+ * TODO:
+ *     Test admin walkthrough
+ *     - log in
+ *     - view users
+ *     - delete user
+ *     - confirm deletion
+ *     - change user username
+ *     - confirm change
+ *     - view cards
+ *     - change card qty
+ *     - confirm card change qty
+ */
