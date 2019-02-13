@@ -5,17 +5,26 @@ let api = supertest.agent('http://localhost:1337'); // Calling agent() here to s
 
 // TODO: Seed database before each test, and clear after
 
-
 /**
- * Returns a function that logs an admin in and manages sessions thanks to supertest.agent()
+ * Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
  */
-function loginAdmin() {
+function loginUser(permission) {
+    let userInfo = {};
+
+    if (!permission) { throw new Error('User permission is required') }
+
+    if (permission === 'admin') {
+        userInfo.username = 'Jai';
+        userInfo.password = 'testing123';
+    }
+    else if (permission === 'user') {
+        userInfo.username = 'Julie';
+        userInfo.password = 'testing123'
+    }
+    
     return function(done) {
         api.post('/auth/login')
-        .send({
-            username: 'Jai',
-            password: 'testing123'
-        })
+        .send(userInfo)
         .expect(302)
         .then(() => {
             done()
@@ -58,7 +67,7 @@ describe('User Login', function() {
 
 describe('Admin Access', function() {
     
-    before(loginAdmin());
+    before(loginUser('admin'));
     
     it('should show all users when an admin accesses /users', function(done) {
         api.get('/users')
@@ -81,4 +90,26 @@ describe('Admin Access', function() {
     //         done();
     //     })
     // });
+
+    /** 
+     * TODO:
+     *     Test regular user walkthrough
+     *     - log in
+     *     - view cards
+     *     - add card to wishlist
+     *     - confirm added card
+     *     - delete card from wishlist
+     *     - confirm deletion
+     * 
+     *     Test admin walkthrough
+     *     - log in
+     *     - view users
+     *     - delete user
+     *     - confirm deletion
+     *     - change user username
+     *     - confirm change
+     *     - view cards
+     *     - change card qty
+     *     - confirm card change qty
+     */
 });
