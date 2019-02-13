@@ -6,7 +6,7 @@
   "scripts": {
     "devserver": "./node_modules/nodemon/bin/nodemon.js server/index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Jai Kamat",
   "license": "ISC",
@@ -26,6 +26,9 @@
     "swig": "^1.4.2"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9",
+    "supertest": "^3.4.2"
   }
 }
