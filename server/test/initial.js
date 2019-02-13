@@ -26,3 +26,48 @@ describe('Card', function() {
         }, done); // Pass done here as failure callback to catch errors
     });
 });
+
+describe('User Login', function() {
+    it('should redirect once a user logs in', function(done) {
+        api.post('/auth/login')
+        .send({
+            username: 'Julie',
+            password: 'testing123'
+        })
+        .set('Accept', 'application/json')
+        .expect(302, done) // 302 is status for redirect
+    });
+});
+
+describe('Admin Access', function() {
+    
+    before(function(done) {
+        api.post('/auth/login')
+        .send({
+            username: 'Jai',
+            password: 'testing123'
+        }).then(() => {
+            done();
+        }, done);
+    });
+    
+    it('should show all users when an admin accesses /users', function(done) {
+        api.get('/users')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(response => {
+            console.log(response);
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    // TODO: Implement this route to return something sane on logout
+    // after(function(done) {
+    //     api.get('/auth.logout')
+    //     .then(response => {
+    //         console.log(response);
+    //         done();
+    //     })
+    // });
+});
