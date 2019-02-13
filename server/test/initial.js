@@ -1,13 +1,30 @@
-let should = require('chai').should;
-let expect = require('chai').expect;
 let assert = require('chai').assert;
 let supertest = require('supertest');
-let api = supertest('http://localhost:1337');
+// Note: See https://stackoverflow.com/questions/14001183/how-to-authenticate-supertest-requests-with-passport, answer 2 for specifics
+let api = supertest.agent('http://localhost:1337'); // Calling agent() here to support sessions between tests
 
 // TODO: Seed database before each test, and clear after
 
+
+/**
+ * Returns a function that logs an admin in and manages sessions thanks to supertest.agent()
+ */
+function loginAdmin() {
+    return function(done) {
+        api.post('/auth/login')
+        .send({
+            username: 'Jai',
+            password: 'testing123'
+        })
+        .expect(302)
+        .then(() => {
+            done()
+        }, done);
+    }
+}
+
 // Note: We do not use arrow functions here because it is difficult to aquire the Mocha context
-// due to lexically bound `this`
+// due to lexically bound `this` --- is this true here for all cases?
 describe('Card', function() {
     it('should return a 200 response', function(done) {
         api.get('/cards')
@@ -41,22 +58,16 @@ describe('User Login', function() {
 
 describe('Admin Access', function() {
     
-    before(function(done) {
-        api.post('/auth/login')
-        .send({
-            username: 'Jai',
-            password: 'testing123'
-        }).then(() => {
-            done();
-        }, done);
-    });
+    before(loginAdmin());
     
     it('should show all users when an admin accesses /users', function(done) {
         api.get('/users')
         .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
-            console.log(response);
+            assert.equal(response.body.length, 2);
+            assert.equal(response.body[0].username, 'Jai');
+            assert.equal(response.body[1].username, 'Julie');
         }).then(() => {
             done();
         }, done);
