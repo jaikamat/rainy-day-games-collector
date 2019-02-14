@@ -14,23 +14,22 @@ async function createCard(card) {
  * @param {Object} card The card object with desired properties
  * @returns The affected card record
  */
-async function updateCard(card) {
-    if (!card.hasOwnProperty('quantity')) {
-        throw new Error('Quantity was not provided');
+async function updateCard(id, quantity) {
+    if (!id) {
+        throw new Error('Id is required to update a card');
     }
-    if (isNaN(card.quantity)) {
+    if (isNaN(quantity)) {
         throw new Error('Quantity was not correct');
     }
-    if (!card.hasOwnProperty('setCode')) {
-        throw new Error('Set Code is required to update a card')
+    if (!quantity) {
+        throw new Error('Quantity is required to update a card');
     }
 
     return await Card.update({
-        quantity: card.quantity
+        quantity: quantity
     }, {
         where: {
-            title: card.title,
-            setCode: card.setCode
+            card_id: id
         }
     }).then((affectedRows) => {
         if (affectedRows[0] === 0) {
@@ -39,8 +38,7 @@ async function updateCard(card) {
             // Return the card that was updated - must re-query
             return Card.findOne({
                 where: {
-                    title: card.title,
-                    setCode: card.setCode
+                    card_id: id
                 }
             });
         }

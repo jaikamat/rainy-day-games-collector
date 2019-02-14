@@ -57,36 +57,17 @@ function logoutUser() {
 describe('Card', function() {
     it('should return a 200 response', function(done) {
         api.get('/cards')
-        .set('Accept', 'application/json')
         .expect(200, done)
     });
     
     it('should retrieve the correct number of objects', function(done) {
         api.get('/cards')
-        .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
             assert.equal(response.body.length, 28);
         }).then(() => {
             done();
-        }, done); // Pass done here as failure callback to catch errors
-    });
-});
-
-describe('Admin Access', function() {
-    before(loginUser('admin'));
-    
-    it('should show all users when an admin accesses /users', function(done) {
-        api.get('/users')
-        .set('Accept', 'application/json')
-        .expect(200)
-        .then(response => {
-            assert.equal(response.body.length, 2);
-            assert.equal(response.body[0].username, 'Jai');
-            assert.equal(response.body[1].username, 'Julie');
-        }).then(() => {
-            done();
-        }, done);
+        }, done); // Pass done here as failure callback to catch errors in the mocha context
     });
 });
 
@@ -96,7 +77,6 @@ describe('User walkthrough', function() {
     
     it('shold be able to view all cards', function(done) {
         api.get('/cards')
-        .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
             assert.equal(response.body.length, 28);
@@ -110,7 +90,6 @@ describe('User walkthrough', function() {
         .send({
             card_id: 7
         })
-        .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
             assert.equal(response.body.card_id, 7)
@@ -121,7 +100,6 @@ describe('User walkthrough', function() {
 
     it('should show the added card in their wishlist', function(done) {
         api.get('/cards/wishlist')
-        .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
             assert.equal(response.body.length, 2);
@@ -142,7 +120,6 @@ describe('User walkthrough', function() {
 
     it('should show the card was deleted from their wishlist', function(done) {
         api.get('/cards/wishlist')
-        .set('Accept', 'application/json')
         .expect(200)
         .then(response => {
             assert.equal(response.body.length, 1);
@@ -153,16 +130,100 @@ describe('User walkthrough', function() {
     });
 });
 
-/** 
- * TODO:
- *     Test admin walkthrough
- *     - log in
- *     - view users
- *     - delete user
- *     - confirm deletion
- *     - change user username
- *     - confirm change
- *     - view cards
- *     - change card qty
- *     - confirm card change qty
- */
+ describe('Admin walkthrough', function() {
+    before(loginUser('admin'));
+    after(logoutUser());
+
+    it('should be able to view all users', function(done) {
+        api.get('/users')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.length, 2);
+            assert.equal(response.body[0].username, 'Jai');
+            assert.equal(response.body[1].username, 'Julie');
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should be able to edit a username', function(done) {
+        api.post('/users')
+        .send({
+            userId: 2,
+            username: 'Jules'
+        })
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.username, 'Jules');
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('shouldn\'t be able to delete themselves', function(done) {
+        api.delete('/users')
+        .send({
+            userId: 1
+        })
+        .expect(500)
+        .then(response => {
+            assert.equal(response.error.text, 'You can\'t delete yourself!');
+        }).then(() => {
+            done()
+        }, done);
+    });
+
+    it('should be able to delete another user', function(done) {
+        api.delete('/users')
+        .send({
+            userId: 2
+        })
+        .expect(204)
+        .then(() => {
+            return api.get('/users')
+            .expect(200)
+        }).then(response => {
+            assert.equal(response.body.length, 1);
+            assert.equal(response.body[0].username, 'Jai');
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should be able to view all cards', function(done) {
+        api.get('/cards')
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.length, 28);
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should be able to change a card\'s quantity', function(done) {
+        let param = 14;
+
+        api.post('/cards/update/' + param)
+        .send({
+            quantity: 30
+        })
+        .expect(200)
+        .then(response => {
+            assert.equal(response.body.quantity, 30);
+        }).then(() => {
+            done();
+        }, done);
+    });
+
+    it('should confirm that card quantity change was persisted', function(done) {
+        api.get('/cards')
+        .expect(200)
+        .then(response => {
+            let card = response.body.find(el => el.card_id === 14);
+    
+            assert.equal(card.quantity, 30);
+        }).then(() => {
+            done();
+        }, done);
+    });
+ });

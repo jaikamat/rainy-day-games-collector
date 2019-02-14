@@ -13,18 +13,18 @@ const PORT = 1337;
 const seed = require('./database/seed');
 
 // Sync models to database and seed data for development
-models.sequelize.sync({ force: true })
-.then(() => {
-    console.log('Database models are fine');
-}).then(() => {
-    return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
-}).then(() => {
-    return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
-}).then(() => {
-    return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
-}).catch((error) => {
-    console.log(error);
-});
+// models.sequelize.sync({ force: true })
+// .then(() => {
+//     console.log('Database models are fine');
+// }).then(() => {
+//     return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
+// }).then(() => {
+//     return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
+// }).then(() => {
+//     return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
+// }).catch((error) => {
+//     console.log(error);
+// });
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });

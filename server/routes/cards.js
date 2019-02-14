@@ -104,9 +104,9 @@ router.get('/search', (req, res) => {
     });
 });
 
-router.post('/update-card', isAdmin, (req, res) => {
-    console.log(req.query);
-    cardController.updateCard(req.query)
+router.post('/update/:id', isAdmin, (req, res) => {
+    console.log('THE PARAM: ' + req.params.id);
+    cardController.updateCard(req.params.id, req.body.quantity)
     .then((card) => {
         res.status(200);
         res.send(card);

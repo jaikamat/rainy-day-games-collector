@@ -27,7 +27,7 @@ router.get('/', isAdmin, (req, res) => {
 });
 
 router.post('/', isAdmin, (req, res) => {
-    userController.updateUser(req.query.userId, req.query.username)
+    userController.updateUser(req.body.userId, req.body.username)
     .then((updatedUser) => {
         res.status(200);
         res.send(updatedUser);
