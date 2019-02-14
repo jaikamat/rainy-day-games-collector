@@ -5,9 +5,8 @@ let api = supertest.agent('http://localhost:1337'); // Calling agent() here to s
 
 // TODO: Seed database before each test, and clear after
 
-/**
- * Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
- */
+
+// Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
 function loginUser(permission) {
     let userInfo = {};
 
@@ -60,20 +59,7 @@ describe('Card', function() {
     });
 });
 
-describe('User Login', function() {
-    it('should redirect once a user logs in', function(done) {
-        api.post('/auth/login')
-        .send({
-            username: 'Julie',
-            password: 'testing123'
-        })
-        .set('Accept', 'application/json')
-        .expect(302, done) // 302 is status for redirect
-    });
-});
-
 describe('Admin Access', function() {
-    
     before(loginUser('admin'));
     
     it('should show all users when an admin accesses /users', function(done) {
