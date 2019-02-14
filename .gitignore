@@ -7,6 +7,3 @@ client/node_modules
 
 #Ignore sqlite3 database
 server/cardsDatabase.db
-
-#Ignore seed files
-server/database/seed.js

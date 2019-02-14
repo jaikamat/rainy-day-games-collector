@@ -1,10 +1,24 @@
-let assert = require('chai').assert;
-let supertest = require('supertest');
+const assert = require('chai').assert;
+const supertest = require('supertest');
+const models = require('../database/models');
+const seed = require('../database/seed');
 // Note: See https://stackoverflow.com/questions/14001183/how-to-authenticate-supertest-requests-with-passport, answer 2 for specifics
-let api = supertest.agent('http://localhost:1337'); // Calling agent() here to support sessions between tests
+const api = supertest.agent('http://localhost:1337'); // Calling agent() here to support sessions between tests
 
-// TODO: Seed database before each test, and clear after
-
+// Seed data before the test suite
+before(function(done) {
+    this.timeout(5000); // Tells mocha that we need more than 2 seconds to seed (race condition)
+    models.sequelize.sync({ force: true })
+    .then(() => {
+        return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
+    }).then(() => {
+        return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
+    }).then(() => {
+        return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
+    }).then(() => {
+        done();
+    }, done);
+});
 
 // Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
 function loginUser(permission) {

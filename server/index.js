@@ -12,42 +12,19 @@ const passportConfig = require('./passport/config');
 const PORT = 1337;
 const seed = require('./database/seed');
 
- // Sync models to database and seed data for development
+// Sync models to database and seed data for development
 models.sequelize.sync({ force: true })
 .then(() => {
     console.log('Database models are fine');
 }).then(() => {
-    models.user.create({
-        username: 'Jai',
-        password: 'testing123',
-        isAdmin: true
-    });
-    return models.user.create({
-        username: 'Julie',
-        password: 'testing123',
-        isAdmin: false
-    });
+    return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
 }).then(() => {
-    return Promise.all(seed.cardData.map((card) => {
-        return models.card.create(card);
-    }));
+    return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
 }).then(() => {
-    models.userCard.create({
-        user_id: 1,
-        card_id: 6
-    });
-    models.userCard.create({
-        user_id: 2,
-        card_id: 8
-    });
-    return models.userCard.create({
-        user_id: 1,
-        card_id: 12
-    });
+    return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
 }).catch((error) => {
     console.log(error);
 });
-
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });
