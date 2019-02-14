@@ -20,6 +20,13 @@ before(function(done) {
     }, done);
 });
 
+after(function(done) {
+    models.sequelize.sync({ force: true })
+    .then(() => {
+        done();
+    }, done);
+});
+
 // Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
 function loginUser(permission) {
     let userInfo = {};

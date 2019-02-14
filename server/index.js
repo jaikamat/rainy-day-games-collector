@@ -26,6 +26,13 @@ const seed = require('./database/seed');
 //     console.log(error);
 // });
 
+models.sequelize.sync()
+.then(() => {
+    return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
+}).catch(error => {
+    console.log(error);
+});
+
 app.set('view engine', 'html');
 app.set('view options', { layout: false });
 
