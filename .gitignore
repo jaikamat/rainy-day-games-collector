@@ -7,3 +7,6 @@ client/node_modules
 
 #Ignore sqlite3 database
 server/cardsDatabase.db
+
+#Ignore gigantic scryfall JSON
+server/scryfall-default-cards.json
