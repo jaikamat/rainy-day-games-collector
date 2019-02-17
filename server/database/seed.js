@@ -1,3 +1,5 @@
+const models = require('../database/models');
+
 const cardData = [
     {
        "id":1,
@@ -302,6 +304,23 @@ const userCardData = [{
    card_id: 12
 }];
 
+// Seeds the database with test data
+const seedTest = () => {
+   return models.sequelize.sync({ force: true })
+   .then(() => {
+      console.log('Database models are fine');
+   }).then(() => {
+      return Promise.all(userData.map(data => models.user.create(data))); // Seed user data
+   }).then(() => {
+      return Promise.all(cardData.map((data) => models.card.create(data))); // Seed card data
+   }).then(() => {
+      return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
+   }).catch((error) => {
+      console.log(error);
+   });
+}
+
 module.exports.cardData = cardData;
 module.exports.userData = userData;
 module.exports.userCardData = userCardData;
+module.exports.seedTest = seedTest;

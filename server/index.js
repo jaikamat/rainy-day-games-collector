@@ -7,31 +7,17 @@ const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const models = require('./database/models');
 const passportConfig = require('./passport/config');
 const PORT = 1337;
 const seed = require('./database/seed');
 
 // Sync models to database and seed data for development
-// models.sequelize.sync({ force: true })
-// .then(() => {
-//     console.log('Database models are fine');
-// }).then(() => {
-//     return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
-// }).then(() => {
-//     return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
-// }).then(() => {
-//     return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
-// }).catch((error) => {
-//     console.log(error);
-// });
-
-models.sequelize.sync()
-.then(() => {
-    return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
-}).catch(error => {
-    console.log(error);
-});
+// Must hit a /seed route for now to use real data
+if (process.env.NODE_ENV === 'test') {
+    seed.seedTest(); // if the environment is 'test', seed db
+} else {
+    seed.seedTest();
+}
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });

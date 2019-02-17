@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const sqlConfig = require('../config');
+const env = process.env.NODE_ENV || 'dev';
+
 const sequelize = new Sequelize('database', 'username', 'password', {
     host: 'localhost',
     dialect: 'sqlite',
@@ -9,7 +12,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
         min: 0,
         idle: 10000
     },
-    storage: './database/sqlite_storage/rdg.db',
+    storage: sqlConfig[env].storage,
     define: {
         freezeTableName: true // This prevents pluralization confusion on model references and in sqlite CLI
     }

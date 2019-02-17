@@ -6,26 +6,20 @@ const seed = require('../database/seed');
 const api = supertest.agent('http://localhost:1337'); // Calling agent() here to support sessions between tests
 
 // Seed data before the test suite
-before(function(done) {
-    this.timeout(5000); // Tells mocha that we need more than 2 seconds to seed (race condition)
-    models.sequelize.sync({ force: true })
-    .then(() => {
-        return Promise.all(seed.userData.map(data => models.user.create(data))); // Seed user data
-    }).then(() => {
-        return Promise.all(seed.cardData.map((data) => models.card.create(data))); // Seed card data
-    }).then(() => {
-        return Promise.all(seed.userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
-    }).then(() => {
-        done();
-    }, done);
-});
+// before(function(done) {
+//     this.timeout(5000); // Tells mocha that we need more than 2 seconds to seed (race condition)
+//     seed.seedTest()
+//     .then(() => {
+//         done();
+//     }, done);
+// });
 
-after(function(done) {
-    models.sequelize.sync({ force: true })
-    .then(() => {
-        done();
-    }, done);
-});
+// after(function(done) {
+//     models.sequelize.sync({ force: true })
+//     .then(() => {
+//         done();
+//     }, done);
+// });
 
 // Returns a function that logs in an admin or regular user and manages sessions thanks to supertest.agent()
 function loginUser(permission) {
