@@ -9,7 +9,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
         min: 0,
         idle: 10000
     },
-    storage: './cardsDatabase.db',
+    storage: './database/sqlite_storage/rdg.db',
     define: {
         freezeTableName: true // This prevents pluralization confusion on model references and in sqlite CLI
     }
