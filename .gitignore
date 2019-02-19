@@ -8,5 +8,8 @@ client/node_modules
 #Ignore sqlite3 database
 server/database/sqlite_storage
 
+#Ignore database config fild
+server/database/config.js
+
 #Ignore gigantic scryfall JSON
 server/scryfall-default-cards.json

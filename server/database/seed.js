@@ -324,6 +324,10 @@ const userData = [{
    username: 'Julie',
    password: 'testing123',
    isAdmin: false
+}, {
+   username: 'Jim',
+   password: 'testing123',
+   isAdmin: false
 }];
 
 const userCardData = [{
@@ -364,6 +368,8 @@ const seedTest = () => {
       }));
    }).then(() => {
       return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
+   }).then(() => {
+      // seed cardInventory data here by looping over cards and attaching
    }).catch((error) => {
       console.log(error);
    });
