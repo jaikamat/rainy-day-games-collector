@@ -65,7 +65,7 @@ describe('Card', function() {
         api.get('/cards')
         .expect(200)
         .then(response => {
-            assert.equal(response.body.length, 28);
+            assert.equal(response.body.length, 30);
         }).then(() => {
             done();
         }, done); // Pass done here as failure callback to catch errors in the mocha context
@@ -80,7 +80,7 @@ describe('User walkthrough', function() {
         api.get('/cards')
         .expect(200)
         .then(response => {
-            assert.equal(response.body.length, 28);
+            assert.equal(response.body.length, 30);
         }).then(() => {
             done();
         }, done);
@@ -195,7 +195,7 @@ describe('User walkthrough', function() {
         api.get('/cards')
         .expect(200)
         .then(response => {
-            assert.equal(response.body.length, 28);
+            assert.equal(response.body.length, 30);
         }).then(() => {
             done();
         }, done);
@@ -206,11 +206,11 @@ describe('User walkthrough', function() {
 
         api.post('/cards/update/' + param)
         .send({
-            quantity: 30
+            quantity: 17
         })
         .expect(200)
         .then(response => {
-            assert.equal(response.body.quantity, 30);
+            assert.equal(response.body.cardInventory.quantity, 17);
         }).then(() => {
             done();
         }, done);
@@ -222,7 +222,7 @@ describe('User walkthrough', function() {
         .then(response => {
             let card = response.body.find(el => el.card_id === 14);
     
-            assert.equal(card.quantity, 30);
+            assert.equal(card.cardInventory.quantity, 17);
         }).then(() => {
             done();
         }, done);
