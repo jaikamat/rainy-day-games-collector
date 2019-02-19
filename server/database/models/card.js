@@ -46,19 +46,17 @@ module.exports = (sequelize, Sequelize) => {
         }
     }, {
         hooks: {
-            // RUN THIS TO SEE IF BEFORE CREATE WORKS
             // After a card entry is created, create
             // a cardInventory 1:1 association entry to record price and quantity in the future
             afterCreate: (card) => {
                 sequelize.models.cardInventory.create()
-                // .then(cardInventory => {
-                //     sequelize.models.card.findOne({
-                //         where: {
-                //             card_id: card.dataValues.card_id
-                //         }
-                //     })
-                // }).then()
-                .catch(error => {
+                .then(cardInventory => {
+                    //update where card id is this card id and set cardInv_id to the just-created id
+                    return sequelize.models.card.update(
+                        { cardInventory_id: cardInventory.dataValues.cardInventory_id },
+                        { where: { card_id: card.dataValues.card_id } }
+                    )
+                }).catch(error => {
                     console.log(error);
                 });
             }
