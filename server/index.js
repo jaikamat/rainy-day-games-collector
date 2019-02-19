@@ -12,7 +12,6 @@ const PORT = 1337;
 const seed = require('./database/seed');
 
 // Sync models to database and seed data for development
-// Must hit a /seed route for now to use real data
 if (process.env.NODE_ENV === 'test') {
     seed.seedTest(); // if the environment is 'test', seed db
 } else {
