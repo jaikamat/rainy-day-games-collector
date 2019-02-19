@@ -1,4 +1,5 @@
 const Card = require('../models').card;
+const CardInventory = require('../models').cardInventory;
 
 /**
  * Writes a card object to the card table
@@ -37,9 +38,8 @@ async function updateCard(id, quantity) {
         } else {
             // Return the card that was updated - must re-query
             return Card.findOne({
-                where: {
-                    card_id: id
-                }
+                where: { card_id: id },
+                include: [{ model: CardInventory }]
             });
         }
     });
@@ -53,7 +53,8 @@ async function updateCard(id, quantity) {
  */
 async function getCardByTitle(title) {
     return Card.findAll({
-        where: { title: title }
+        where: { title: title },
+        include: [{ model: CardInventory }]
     });
 }
 
@@ -62,7 +63,11 @@ async function getCardByTitle(title) {
  * @returns Returns an array of card objects
  */
 async function getAllCards() {
-    return await Card.findAll();
+    return await Card.findAll({
+        include: [{
+            model: CardInventory
+        }]
+    });
 }
 
 // TODO: Flesh out the user sort queries to minimize code as well as errors
