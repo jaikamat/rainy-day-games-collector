@@ -26,12 +26,6 @@ async function updateCard(id, quantity) {
         throw new Error('Quantity is required to update a card');
     }
 
-    // find card by id
-    // get cardinventory id
-    // update qty in cardinventory where cardinventory id
-    // re-query for card
-    // return card
-
     return await Card.findOne({
         where: { card_id: id }
     }).then(card => {
