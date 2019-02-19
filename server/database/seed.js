@@ -365,7 +365,25 @@ const seedTest = () => {
    }).then(() => {
       return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
    }).then(() => {
-      // seed cardInventory data here by looping over cards and attaching
+      // seed cardInventory data here by looping over all found cards and attaching their cardInv_id
+      // NOTE: This is some jank spaghetti right here
+      // TODO: clean this up or optimize it with some best practices
+      return models.card.findAll()
+      .then(cards => {
+         return Promise.all(cards.map(card => {
+            return models.cardInventory.create()
+         }))
+      })
+   }).then(cardInvArray => {
+      return Promise.all(cardInvArray.map(cardInv => {
+         return models.card.update({
+            cardInventory_id: cardInv.cardInventory_id
+         }, {
+            where: {
+               card_id: cardInv.cardInventory_id
+            }
+         })
+      }))
    }).catch((error) => {
       console.log(error);
    });
