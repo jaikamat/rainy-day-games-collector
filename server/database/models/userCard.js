@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const UserCard = sequelize.define('userCard', {
         userCard_id: {
-            autoincrement: true,
+            autoIncrement: true,
             primaryKey: true,
             type: Sequelize.INTEGER
         },

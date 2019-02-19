@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const Card = sequelize.define('card', {
         card_id: {
-            autoincrement: true,
+            autoIncrement: true, // NOTE: This must be camelcase or it fails silently when attempting to return model instance id's in hooks
             primaryKey: true,
             type: Sequelize.INTEGER
         },
@@ -36,23 +36,29 @@ module.exports = (sequelize, Sequelize) => {
         rarity: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        cardInventory_id: {
+            type: Sequelize.INTEGER,
+            references: {
+                model: 'cardInventory',
+                key: 'cardInventory_id'
+            }
         }
     }, {
         hooks: {
+            // RUN THIS TO SEE IF BEFORE CREATE WORKS
             // After a card entry is created, create
-            // a cardInventory 1:1 association entry to record price and quantity later
+            // a cardInventory 1:1 association entry to record price and quantity in the future
             afterCreate: (card) => {
-                sequelize.models.card.findOne({
-                    where: {
-                        scryfall_id: card.dataValues.scryfall_id
-                    }
-                }).then(card => {
-                    return sequelize.models.cardInventory.create({
-                        card_id: card.card_id,
-                        price: 0,
-                        quantity: 0
-                    })
-                }).catch(error => {
+                sequelize.models.cardInventory.create()
+                // .then(cardInventory => {
+                //     sequelize.models.card.findOne({
+                //         where: {
+                //             card_id: card.dataValues.card_id
+                //         }
+                //     })
+                // }).then()
+                .catch(error => {
                     console.log(error);
                 });
             }
@@ -62,6 +68,7 @@ module.exports = (sequelize, Sequelize) => {
     // Create associations
     Card.associate = (models) => {
         Card.belongsToMany(models.user, { through: models.userCard });
+        Card.belongsTo(models.cardInventory, { foreignKey: 'cardInventory_id' });
     };
 
     return Card

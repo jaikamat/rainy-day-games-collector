@@ -1,17 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
     const CardInventory = sequelize.define('cardInventory', {
         cardInventory_id: {
-            autoincrement: true,
+            autoIncrement: true,
             primaryKey: true,
             type: Sequelize.INTEGER
-        },
-        card_id: {
-            allowNull: false,
-            type: Sequelize.INTEGER,
-            references: {
-                model: 'card',
-                key: 'card_id'
-            }
         },
         price: {
             type: Sequelize.DECIMAL,
@@ -22,11 +14,6 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0
         }
     });
-
-    // Create associations
-    CardInventory.associate = (models) => {
-        CardInventory.belongsTo(models.card, { foreignKey: 'card_id' });
-    };
 
     return CardInventory;
 };
