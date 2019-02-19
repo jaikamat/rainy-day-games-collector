@@ -51,11 +51,14 @@ module.exports = (sequelize, Sequelize) => {
             afterCreate: (card) => {
                 sequelize.models.cardInventory.create()
                 .then(cardInventory => {
-                    //update where card id is this card id and set cardInv_id to the just-created id
                     return sequelize.models.card.update(
-                        { cardInventory_id: cardInventory.dataValues.cardInventory_id },
-                        { where: { card_id: card.dataValues.card_id } }
+                        { cardInventory_id: cardInventory.dataValues.cardInventory_id }, // Tie the foreignKey on card to the key of cardInventory
+                        { where: { card_id: card.dataValues.card_id } } // Where this is the current card created
                     )
+                }).then(numRows => {
+                    if (numRows > 1 || numRows === 0) {
+                        throw new Error('Only 1 row must be updated')
+                    };
                 }).catch(error => {
                     console.log(error);
                 });
