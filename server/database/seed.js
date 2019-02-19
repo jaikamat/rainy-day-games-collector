@@ -324,10 +324,6 @@ const userData = [{
    username: 'Julie',
    password: 'testing123',
    isAdmin: false
-}, {
-   username: 'Jim',
-   password: 'testing123',
-   isAdmin: false
 }];
 
 const userCardData = [{
@@ -360,7 +356,7 @@ const seedTest = () => {
    .then(() => {
       console.log('Database models are fine');
    }).then(() => {
-      return Promise.all(userData.map(data => models.user.create(data))); // Seed user data
+      return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
    }).then(() => {
       return Promise.all(scryfallData.map((data) => {
          let manipulatedData = manipScryfallData(data);

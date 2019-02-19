@@ -68,7 +68,7 @@ module.exports = (sequelize, Sequelize) => {
 
     // Create associations
     Card.associate = (models) => {
-        Card.belongsToMany(models.user, { through: models.userCard });
+        Card.belongsToMany(models.users, { through: models.userCard });
         Card.belongsTo(models.cardInventory, { foreignKey: 'cardInventory_id' });
     };
 
