@@ -11,12 +11,8 @@ const passportConfig = require('./passport/config');
 const PORT = 1337;
 const seed = require('./database/seed');
 
-// Sync models to database and seed data for development
-if (process.env.NODE_ENV === 'test') {
-    seed.seedTest(); // if the environment is 'test', seed db
-} else {
-    seed.seedTest();
-}
+// Require models separately and seed based on NODE_ENV
+seed.seed();
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });
@@ -35,6 +31,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use('/', express.static(__dirname + '/public'));
 
 app.listen(PORT, () => {

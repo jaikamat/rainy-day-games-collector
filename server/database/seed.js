@@ -350,25 +350,33 @@ const manipScryfallData = (card) => {
    }
 }
 
+const createUsers = (data) => {
+   return Promise.all(data.map(el => models.users.create(el)));
+}
+
+const createCards = (data) => {
+   return Promise.all(data.map(el => {
+      models.card.create(manipScryfallData(el));
+   }));
+}
+
+const createWishlists = (data) => {
+   return Promise.all(userCardData.map(el => models.userCard.create(el)));
+}
+
 // Seeds the database with data depending on the node environment variable
 // TODO: Refactor this to make it more maintainable
-const seedTest = () => {
+const seed = () => {
    let env = process.env.NODE_ENV || 'development'
 
    if (env === 'test') {
       return models.sequelize.sync({ force: true })
       .then(() => {
          console.log('Database models are fine');
-      }).then(() => {
-         return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
-      }).then(() => {
-         return Promise.all(scryfallData.map((data) => {
-            let manipulatedData = manipScryfallData(data);
-            models.card.create(manipulatedData); // Seed card data
-         }));
-      }).then(() => {
-         return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
-      }).then(() => {
+      }).then(() => createUsers(userData))
+      .then(() => createCards(scryfallData))
+      .then(() => createWishlists(userCardData))
+      .then(() => {
          // seed cardInventory data here by looping over all found cards and attaching their cardInv_id
          // NOTE: This is some jank spaghetti right here
          // TODO: clean this up or optimize it with some best practices
@@ -395,15 +403,11 @@ const seedTest = () => {
       return models.sequelize.sync({ force: true })
       .then(() => {
          console.log('Database models are fine');
-      }).then(() => {
-         return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
-      }).catch(error => {
+      }).then(() => createUsers(userData))
+      .catch(error => {
          console.log(error);
       })
    }
 }
 
-module.exports.cardData = cardData;
-module.exports.userData = userData;
-module.exports.userCardData = userCardData;
-module.exports.seedTest = seedTest;
+module.exports.seed = seed;
