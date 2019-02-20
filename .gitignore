@@ -15,4 +15,4 @@ server/database/config.js
 server/scryfall-default-cards.json
 
 #Ignore .env file with super secret tech
-server/config.env
+server/.env
