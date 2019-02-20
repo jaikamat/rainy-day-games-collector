@@ -350,43 +350,57 @@ const manipScryfallData = (card) => {
    }
 }
 
-// Seeds the database with test data
+// Seeds the database with data depending on the node environment variable
+// TODO: Refactor this to make it more maintainable
 const seedTest = () => {
-   return models.sequelize.sync({ force: true })
-   .then(() => {
-      console.log('Database models are fine');
-   }).then(() => {
-      return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
-   }).then(() => {
-      return Promise.all(scryfallData.map((data) => {
-         let manipulatedData = manipScryfallData(data);
-         models.card.create(manipulatedData); // Seed card data
-      }));
-   }).then(() => {
-      return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
-   }).then(() => {
-      // seed cardInventory data here by looping over all found cards and attaching their cardInv_id
-      // NOTE: This is some jank spaghetti right here
-      // TODO: clean this up or optimize it with some best practices
-      return models.card.findAll()
-      .then(cards => {
-         return Promise.all(cards.map(card => {
-            return models.cardInventory.create()
-         }))
-      })
-   }).then(cardInvArray => {
-      return Promise.all(cardInvArray.map(cardInv => {
-         return models.card.update({
-            cardInventory_id: cardInv.cardInventory_id
-         }, {
-            where: {
-               card_id: cardInv.cardInventory_id
-            }
+   let env = process.env.NODE_ENV || 'development'
+
+   if (env === 'test') {
+      return models.sequelize.sync({ force: true })
+      .then(() => {
+         console.log('Database models are fine');
+      }).then(() => {
+         return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
+      }).then(() => {
+         return Promise.all(scryfallData.map((data) => {
+            let manipulatedData = manipScryfallData(data);
+            models.card.create(manipulatedData); // Seed card data
+         }));
+      }).then(() => {
+         return Promise.all(userCardData.map(data => models.userCard.create(data))); // Seed wishlist data
+      }).then(() => {
+         // seed cardInventory data here by looping over all found cards and attaching their cardInv_id
+         // NOTE: This is some jank spaghetti right here
+         // TODO: clean this up or optimize it with some best practices
+         return models.card.findAll()
+         .then(cards => {
+            return Promise.all(cards.map(card => {
+               return models.cardInventory.create()
+            }))
          })
-      }))
-   }).catch((error) => {
-      console.log(error);
-   });
+      }).then(cardInvArray => {
+         return Promise.all(cardInvArray.map(cardInv => {
+            return models.card.update({
+               cardInventory_id: cardInv.cardInventory_id
+            }, {
+               where: {
+                  card_id: cardInv.cardInventory_id
+               }
+            })
+         }))
+      }).catch((error) => {
+         console.log(error);
+      });
+   } else if (env === "development") {
+      return models.sequelize.sync({ force: true })
+      .then(() => {
+         console.log('Database models are fine');
+      }).then(() => {
+         return Promise.all(userData.map(data => models.users.create(data))); // Seed user data
+      }).catch(error => {
+         console.log(error);
+      })
+   }
 }
 
 module.exports.cardData = cardData;
