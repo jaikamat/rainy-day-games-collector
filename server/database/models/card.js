@@ -19,7 +19,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         image_uri: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         colors: {
             type: Sequelize.STRING, // Note: joined from source array into single string

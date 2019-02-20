@@ -338,12 +338,21 @@ const userCardData = [{
 }];
 
 const manipScryfallData = (card) => {
+   // TODO: need to capture images from cards that have cardFace properties rather than image links
+   let imageUri = null;
+
+   if (!card.image_uris) {
+      imageUri = null
+   } else {
+      imageUri = card.image_uris.normal
+   }
+
    return {
       scryfall_id: card.id,
       title: card.name,
       scryfall_uri: card.scryfall_uri,
-      image_uri: card.image_uris.normal,
-      colors: card.colors.join(''),
+      image_uri: imageUri,
+      colors: card.color_identity.join(''),
       reserved: card.reserved,
       setCode: card.set,
       rarity: card.rarity
@@ -362,6 +371,10 @@ const createCards = (data) => {
 
 const createWishlists = (data) => {
    return Promise.all(data.map(el => models.userCard.create(el)));
+}
+
+const bulkCreateCards = (dataArray) => {
+   return models.card.bulkCreate(dataArray.map(el => manipScryfallData(el)));
 }
 
 // Seeds the database with data depending on the node environment variable
@@ -398,9 +411,24 @@ const seed = () => {
       })
       .catch((error) => console.log(error));
    } else if (env === "development") {
+
+      const fs = require('fs');
+      const performance = require('perf_hooks').performance;
+      let scryfallJSON = JSON.parse(fs.readFileSync('./scryfall-default-cards.json'), 'utf8');
+
+      let t0, t1; // Record time
+
       return models.sequelize.sync({ force: true })
       .then(() => console.log('Database models are fine'))
       .then(() => createUsers(userData))
+      .then(() => {
+         t0 = performance.now();
+         return bulkCreateCards(scryfallJSON);
+      })
+      .then(() => {
+         t1 = performance.now();
+         console.log("Seeding cards took " + (t1 - t0)/1000 + " seconds")
+      })
       .catch(error => console.log(error));
    }
 }

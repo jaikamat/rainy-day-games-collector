@@ -8,13 +8,15 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
     host: config.host,
     dialect: config.dialect,
     pool: {
-        max: 5,
+        max: 30,
         min: 0,
-        idle: 10000
+        idle: 20000,
+        acquire: 20000 // Increase this to handle large initial seeding of ~50000 rows
     },
     define: {
         freezeTableName: true // This prevents pluralization confusion on model references and in sqlite CLI
-    }
+    },
+    logging: false // Flag that determines if SQL operations are displayed on console
 });
 
 // Create db object for easy export
