@@ -361,7 +361,7 @@ const createCards = (data) => {
 }
 
 const createWishlists = (data) => {
-   return Promise.all(userCardData.map(el => models.userCard.create(el)));
+   return Promise.all(data.map(el => models.userCard.create(el)));
 }
 
 // Seeds the database with data depending on the node environment variable
@@ -371,9 +371,8 @@ const seed = () => {
 
    if (env === 'test') {
       return models.sequelize.sync({ force: true })
-      .then(() => {
-         console.log('Database models are fine');
-      }).then(() => createUsers(userData))
+      .then(() => console.log('Database models are fine'))
+      .then(() => createUsers(userData))
       .then(() => createCards(scryfallData))
       .then(() => createWishlists(userCardData))
       .then(() => {
@@ -396,17 +395,13 @@ const seed = () => {
                }
             })
          }))
-      }).catch((error) => {
-         console.log(error);
-      });
+      })
+      .catch((error) => console.log(error));
    } else if (env === "development") {
       return models.sequelize.sync({ force: true })
-      .then(() => {
-         console.log('Database models are fine');
-      }).then(() => createUsers(userData))
-      .catch(error => {
-         console.log(error);
-      })
+      .then(() => console.log('Database models are fine'))
+      .then(() => createUsers(userData))
+      .catch(error => console.log(error));
    }
 }
 

@@ -12,7 +12,7 @@ const PORT = 1337;
 const seed = require('./database/seed');
 
 // Require models separately and seed based on NODE_ENV
-seed.seed();
+seed.seed().then(() => console.log('Seeding complete'));
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });
