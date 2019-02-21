@@ -373,10 +373,6 @@ const createWishlists = (data) => {
    return Promise.all(data.map(el => models.userCard.create(el)));
 }
 
-const bulkCreateCards = (dataArray) => {
-   return models.card.bulkCreate(dataArray.map(el => manipScryfallData(el)));
-}
-
 // Seeds the database with data depending on the node environment variable
 // TODO: Refactor this to make it more maintainable
 const seed = () => {
@@ -423,7 +419,26 @@ const seed = () => {
       .then(() => createUsers(userData))
       .then(() => {
          t0 = performance.now();
-         return bulkCreateCards(scryfallJSON);
+
+         return models.cardInventory.bulkCreate(scryfallJSON.map(el => {}))
+         .then(() => {
+            return models.cardInventory.findAll();
+         });
+      })
+      .then(cardInvArray => {
+         console.log('CardInventory entries seeded');
+
+         let manipulatedData = scryfallJSON.map(el => manipScryfallData(el));
+
+         if (cardInvArray.length !== manipulatedData.length) { // If not, seeding will go wrong...very wrong
+            throw new Error('CardInventory and Card seed array lengths must be equal');
+         }
+
+         manipulatedData.forEach((card, index, array) => {
+            array[index].cardInventory_id = index + 1;
+         });
+
+         return models.card.bulkCreate(manipulatedData);;
       })
       .then(() => {
          t1 = performance.now();
