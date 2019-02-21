@@ -7,7 +7,7 @@ module.exports = (passport) => {
     });
     
     router.post('/login', passport.authenticate('login-local', {
-        successRedirect: '/cards',
+        successRedirect: '/cards/paginate/1',
         failureRedirect: '/login'
     }));
     
@@ -22,7 +22,7 @@ module.exports = (passport) => {
             if (!user) { return res.send(info.message) } // Grabs the message from the done() invocation
             req.login(user, (error) => { // Must call this to establish a session with the new user
                 if (error) { return next(error) }
-                res.redirect('/cards');
+                res.redirect('/cards/paginate/1');
             });
         })(req, res, next);
     });

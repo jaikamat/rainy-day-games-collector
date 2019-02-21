@@ -41,13 +41,11 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/paginate', (req, res) => {
-    cardController.getCardsPaginated()
-    .then((cards) => {
+router.get('/paginate/:page', (req, res) => {
+    cardController.getCardsPaginated(req.params.page, 10)
+    .then((data) => {
         res.status(200);
-        res.render('cards.html', {
-            cards: cards
-        });
+        res.send(data);
     }).catch((error) => {
         res.status(500);
         res.send('ERROR MESSAGE!')

@@ -15,15 +15,24 @@ async function createCard(card) {
  * @param {Object} card The card object with desired properties
  * @returns The affected card record
  */
-async function updateCard(id, quantity) {
+async function updateCard(id, qty) {
+    if (!qty) {
+        throw new Error('Quantity is required to update a card');
+    }
     if (!id) {
         throw new Error('Id is required to update a card');
     }
+
+    const quantity = Number(qty);
+
     if (isNaN(quantity)) {
         throw new Error('Quantity was not correct');
     }
-    if (!quantity) {
-        throw new Error('Quantity is required to update a card');
+    if (quantity < 0) {
+        throw new Error('Negative cards are not possible');
+    }
+    if (!Number.isInteger(quantity)) {
+        throw new Error('Quantity must be an integer value');
     }
 
     return await Card.findOne({
@@ -74,9 +83,29 @@ async function getAllCards() {
     });
 }
 
-// TODO: Flesh out the user sort queries to minimize code as well as errors
-async function getCardsPaginated(childProperty, key, sortBy) {
-    // TODO: re-code this with updatedAt and title sort
+/**
+ * Retrieves a slice of data from the Cards table; for pagination
+ * @param {*} pageNumber The requested page number
+ * @param {*} numRecords The limit; number of records to retrieve
+ */
+async function getCardsPaginated(pageNumber, numRecords) {
+    let page = pageNumber;
+    let offset = 0;
+    
+    let cards = await Card.findAndCountAll()
+    let pages = Math.ceil(cards.count / numRecords);
+    offset = numRecords * (page - 1);
+
+    let cardsPage = await Card.findAll({
+        limit: numRecords,
+        offset: offset
+    });
+
+    return {
+        count: cards.count,
+        pages: pages,
+        cards: cardsPage
+    }
 }
 
 module.exports.getCardByTitle = getCardByTitle;
