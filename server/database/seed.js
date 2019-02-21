@@ -283,7 +283,7 @@ const cardData = [
     }
 ];
 
-const scryfallData = [
+const scryfallTestData = [
    {"object":"card","id":"73a32fa2-da7a-442d-89d9-cf1461441f4a","oracle_id":"88929ea9-900f-4dbb-b16c-cf3bad4e410c","multiverse_ids":[460782],"name":"Progenitor Mimic","lang":"en","released_at":"2019-02-15","uri":"https://api.scryfall.com/cards/73a32fa2-da7a-442d-89d9-cf1461441f4a","scryfall_uri":"https://scryfall.com/card/gk2/123/progenitor-mimic?utm_source=api","layout":"normal","highres_image":false,"image_uris":{"small":"https://img.scryfall.com/cards/small/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","normal":"https://img.scryfall.com/cards/normal/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","large":"https://img.scryfall.com/cards/large/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","png":"https://img.scryfall.com/cards/png/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.png?1550112773","art_crop":"https://img.scryfall.com/cards/art_crop/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","border_crop":"https://img.scryfall.com/cards/border_crop/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773"},"mana_cost":"{4}{G}{U}","cmc":6.0,"type_line":"Creature — Shapeshifter","oracle_text":"You may have Progenitor Mimic enter the battlefield as a copy of any creature on the battlefield, except it has \"At the beginning of your upkeep, if this creature isn't a token, create a token that's a copy of this creature.\"","power":"0","toughness":"0","colors":["G","U"],"color_identity":["G","U"],"legalities":{"standard":"not_legal","future":"not_legal","frontier":"not_legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"not_legal","commander":"legal","duel":"legal","oldschool":"not_legal"},"games":["paper"],"reserved":false,"foil":false,"nonfoil":true,"oversized":false,"promo":false,"reprint":true,"set":"gk2","set_name":"RNA Guild Kit","set_uri":"https://api.scryfall.com/sets/ce193344-b2a8-4b56-8243-c6ba4f6e20ef","set_search_uri":"https://api.scryfall.com/cards/search?order=set\u0026q=e%3Agk2\u0026unique=prints","scryfall_set_uri":"https://scryfall.com/sets/gk2?utm_source=api","rulings_uri":"https://api.scryfall.com/cards/73a32fa2-da7a-442d-89d9-cf1461441f4a/rulings","prints_search_uri":"https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A88929ea9-900f-4dbb-b16c-cf3bad4e410c\u0026unique=prints","collector_number":"123","digital":false,"rarity":"mythic","artist":"Daarken","border_color":"black","frame":"2015","frame_effect":"","full_art":false,"story_spotlight":false,"edhrec_rank":614,"related_uris":{"gatherer":"http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=460782","tcgplayer_decks":"https://decks.tcgplayer.com/magic/deck/search?contains=Progenitor+Mimic\u0026page=1\u0026partner=Scryfall\u0026utm_campaign=affiliate\u0026utm_medium=scryfall\u0026utm_source=scryfall","edhrec":"http://edhrec.com/route/?cc=Progenitor+Mimic","mtgtop8":"http://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=Progenitor+Mimic"}},
    {"object":"card","id":"1f6e467d-8283-423b-bbf8-8bf7402946db","oracle_id":"8c1ea1a5-5966-4d14-8361-ffc6a8d1bd79","multiverse_ids":[460781],"name":"Plaxcaster Frogling","lang":"en","released_at":"2019-02-15","uri":"https://api.scryfall.com/cards/1f6e467d-8283-423b-bbf8-8bf7402946db","scryfall_uri":"https://scryfall.com/card/gk2/122/plaxcaster-frogling?utm_source=api","layout":"normal","highres_image":false,"image_uris":{"small":"https://img.scryfall.com/cards/small/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.jpg?1550112768","normal":"https://img.scryfall.com/cards/normal/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.jpg?1550112768","large":"https://img.scryfall.com/cards/large/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.jpg?1550112768","png":"https://img.scryfall.com/cards/png/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.png?1550112768","art_crop":"https://img.scryfall.com/cards/art_crop/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.jpg?1550112768","border_crop":"https://img.scryfall.com/cards/border_crop/front/1/f/1f6e467d-8283-423b-bbf8-8bf7402946db.jpg?1550112768"},"mana_cost":"{1}{G}{U}","cmc":3.0,"type_line":"Creature — Frog Mutant","oracle_text":"Graft 3 (This creature enters the battlefield with three +1/+1 counters on it. Whenever another creature enters the battlefield, you may move a +1/+1 counter from this creature onto it.)\n{2}: Target creature with a +1/+1 counter on it gains shroud until end of turn. (It can't be the target of spells or abilities.)","power":"0","toughness":"0","colors":["G","U"],"color_identity":["G","U"],"legalities":{"standard":"not_legal","future":"not_legal","frontier":"not_legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"legal","commander":"legal","duel":"legal","oldschool":"not_legal"},"games":["paper"],"reserved":false,"foil":false,"nonfoil":true,"oversized":false,"promo":false,"reprint":true,"set":"gk2","set_name":"RNA Guild Kit","set_uri":"https://api.scryfall.com/sets/ce193344-b2a8-4b56-8243-c6ba4f6e20ef","set_search_uri":"https://api.scryfall.com/cards/search?order=set\u0026q=e%3Agk2\u0026unique=prints","scryfall_set_uri":"https://scryfall.com/sets/gk2?utm_source=api","rulings_uri":"https://api.scryfall.com/cards/1f6e467d-8283-423b-bbf8-8bf7402946db/rulings","prints_search_uri":"https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A8c1ea1a5-5966-4d14-8361-ffc6a8d1bd79\u0026unique=prints","collector_number":"122","digital":false,"rarity":"uncommon","artist":"Greg Staples","border_color":"black","frame":"2015","frame_effect":"","full_art":false,"story_spotlight":false,"edhrec_rank":2689,"related_uris":{"gatherer":"http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=460781","tcgplayer_decks":"https://decks.tcgplayer.com/magic/deck/search?contains=Plaxcaster+Frogling\u0026page=1\u0026partner=Scryfall\u0026utm_campaign=affiliate\u0026utm_medium=scryfall\u0026utm_source=scryfall","edhrec":"http://edhrec.com/route/?cc=Plaxcaster+Frogling","mtgtop8":"http://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=Plaxcaster+Frogling"}},
    {"object":"card","id":"3eb70bdf-16af-46bf-a78b-bd3bdd9134ae","oracle_id":"590a4c09-2d19-40db-8d0d-7765f3b63e38","multiverse_ids":[460780],"name":"Omnibian","lang":"en","released_at":"2019-02-15","uri":"https://api.scryfall.com/cards/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae","scryfall_uri":"https://scryfall.com/card/gk2/121/omnibian?utm_source=api","layout":"normal","highres_image":false,"image_uris":{"small":"https://img.scryfall.com/cards/small/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.jpg?1550112762","normal":"https://img.scryfall.com/cards/normal/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.jpg?1550112762","large":"https://img.scryfall.com/cards/large/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.jpg?1550112762","png":"https://img.scryfall.com/cards/png/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.png?1550112762","art_crop":"https://img.scryfall.com/cards/art_crop/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.jpg?1550112762","border_crop":"https://img.scryfall.com/cards/border_crop/front/3/e/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae.jpg?1550112762"},"mana_cost":"{1}{G}{G}{U}","cmc":4.0,"type_line":"Creature — Frog","oracle_text":"{T}: Target creature becomes a Frog with base power and toughness 3/3 until end of turn.","power":"3","toughness":"3","colors":["G","U"],"color_identity":["G","U"],"legalities":{"standard":"not_legal","future":"not_legal","frontier":"not_legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"legal","commander":"legal","duel":"legal","oldschool":"not_legal"},"games":["paper"],"reserved":false,"foil":false,"nonfoil":true,"oversized":false,"promo":false,"reprint":true,"set":"gk2","set_name":"RNA Guild Kit","set_uri":"https://api.scryfall.com/sets/ce193344-b2a8-4b56-8243-c6ba4f6e20ef","set_search_uri":"https://api.scryfall.com/cards/search?order=set\u0026q=e%3Agk2\u0026unique=prints","scryfall_set_uri":"https://scryfall.com/sets/gk2?utm_source=api","rulings_uri":"https://api.scryfall.com/cards/3eb70bdf-16af-46bf-a78b-bd3bdd9134ae/rulings","prints_search_uri":"https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A590a4c09-2d19-40db-8d0d-7765f3b63e38\u0026unique=prints","collector_number":"121","digital":false,"rarity":"rare","flavor_text":"\"This creature has hyperevolved chameleonic abilities. It no longer mimics its surroundings, instead forcing them to take on its form.\"\n—Simic research notes","artist":"Jim Nelson","border_color":"black","frame":"2015","frame_effect":"","full_art":false,"story_spotlight":false,"edhrec_rank":10369,"related_uris":{"gatherer":"http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=460780","tcgplayer_decks":"https://decks.tcgplayer.com/magic/deck/search?contains=Omnibian\u0026page=1\u0026partner=Scryfall\u0026utm_campaign=affiliate\u0026utm_medium=scryfall\u0026utm_source=scryfall","edhrec":"http://edhrec.com/route/?cc=Omnibian","mtgtop8":"http://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=Omnibian"}},
@@ -359,93 +359,62 @@ const manipScryfallData = (card) => {
    }
 }
 
-const createUsers = (data) => {
-   return Promise.all(data.map(el => models.users.create(el)));
-}
-
-const createCards = (data) => {
-   return Promise.all(data.map(el => {
-      models.card.create(manipScryfallData(el));
-   }));
-}
-
-const createWishlists = (data) => {
-   return Promise.all(data.map(el => models.userCard.create(el)));
-}
-
 // Seeds the database with data depending on the node environment variable
-// TODO: Refactor this to make it more maintainable
 const seed = () => {
+   const performance = require('perf_hooks').performance;
    let env = process.env.NODE_ENV || 'development'
+   let scryfallCards; // Assigned depending on environment variables
+   let t0, t1; // Record time
 
    if (env === 'test') {
-      return models.sequelize.sync({ force: true })
-      .then(() => console.log('Database models are fine'))
-      .then(() => createUsers(userData))
-      .then(() => createCards(scryfallData))
-      .then(() => createWishlists(userCardData))
-      .then(() => {
-         // seed cardInventory data here by looping over all found cards and attaching their cardInv_id
-         // NOTE: This is some jank spaghetti right here
-         // TODO: clean this up or optimize it with some best practices
-         return models.card.findAll()
-         .then(cards => {
-            return Promise.all(cards.map(card => {
-               return models.cardInventory.create()
-            }))
-         })
-      }).then(cardInvArray => {
-         return Promise.all(cardInvArray.map(cardInv => {
-            return models.card.update({
-               cardInventory_id: cardInv.cardInventory_id
-            }, {
-               where: {
-                  card_id: cardInv.cardInventory_id
-               }
-            })
-         }))
-      })
-      .catch((error) => console.log(error));
-   } else if (env === "development") {
+      scryfallCards = scryfallTestData;
 
+   } else if (env === 'development') {
       const fs = require('fs');
-      const performance = require('perf_hooks').performance;
-      let scryfallJSON = JSON.parse(fs.readFileSync('./scryfall-default-cards.json'), 'utf8');
 
-      let t0, t1; // Record time
+      scryfallCards = JSON.parse(fs.readFileSync('./scryfall-default-cards.json'), 'utf8');
 
-      return models.sequelize.sync({ force: true })
-      .then(() => console.log('Database models are fine'))
-      .then(() => createUsers(userData))
-      .then(() => {
-         t0 = performance.now();
-
-         return models.cardInventory.bulkCreate(scryfallJSON.map(el => {}))
-         .then(() => {
-            return models.cardInventory.findAll();
-         });
-      })
-      .then(cardInvArray => {
-         console.log('CardInventory entries seeded');
-
-         let manipulatedData = scryfallJSON.map(el => manipScryfallData(el));
-
-         if (cardInvArray.length !== manipulatedData.length) { // If not, seeding will go wrong...very wrong
-            throw new Error('CardInventory and Card seed array lengths must be equal');
-         }
-
-         manipulatedData.forEach((card, index, array) => {
-            array[index].cardInventory_id = index + 1;
-         });
-
-         return models.card.bulkCreate(manipulatedData);;
-      })
-      .then(() => {
-         t1 = performance.now();
-         console.log("Seeding cards took " + (t1 - t0)/1000 + " seconds")
-      })
-      .catch(error => console.log(error));
+   } else {
+      throw new Error('Seeding could not be completed. Check NODE_ENV');
    }
+
+   return models.sequelize.sync({ force: true })
+   .then(() => console.log('Database models are fine'))
+   .then(() => {
+      return Promise.all(userData.map(el => models.users.create(el)));
+   })
+   .then(() => {
+      t0 = performance.now();
+
+      return models.cardInventory.bulkCreate(scryfallCards.map(el => {}))
+      .then(() => {
+         return models.cardInventory.findAll();
+      });
+   })
+   .then(cardInvArray => {
+      console.log('CardInventory entries seeded');
+
+      let manipulatedData = scryfallCards.map(el => manipScryfallData(el));
+
+      // The following logic manually sets the foreign key reference on
+      // the card model to newly created cardInventory models
+      if (cardInvArray.length !== manipulatedData.length) { // If not, seeding will go wrong...very wrong
+         throw new Error('CardInventory and Card seed array lengths must be equal');
+      }
+      
+      manipulatedData.forEach((card, index, array) => {
+         array[index].cardInventory_id = index + 1;
+      });
+
+      return models.card.bulkCreate(manipulatedData);;
+   })
+   .then(() => models.userCard.bulkCreate(userCardData))
+   .then(() => {
+      t1 = performance.now();
+      console.log('Card entries seeded');
+      console.log("Seeding took " + ((t1 - t0)/1000).toFixed(3) + " seconds");
+   })
+   .catch(error => console.log(error));
 }
 
 module.exports.seed = seed;
