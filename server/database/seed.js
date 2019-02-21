@@ -1,287 +1,16 @@
 const models = require('../database/models');
 
-const cardData = [
-    {
-       "id":1,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"C",
-       "title":"Azorius Locket",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":2,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Dovins Automaton",
-       "setCode":"RNA",
-       "price":1,
-       "quantity":3
-    },
-    {
-       "id":3,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Gate Colossus",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":8
-    },
-    {
-       "id":4,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"R",
-       "title":"Glass of the Guildpact",
-       "setCode":"RNA",
-       "price":2,
-       "quantity":4
-    },
-    {
-       "id":5,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"C",
-       "title":"Gruul Locket",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":6,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Junktroller",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":14
-    },
-    {
-       "id":7,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"C",
-       "title":"Orzhov Locket",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":8,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"C",
-       "title":"Rakdos Locket",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":9,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Scrabbling Claws",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":10
-    },
-    {
-       "id":10,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Screaming Shield",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":11
-    },
-    {
-       "id":11,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"C",
-       "title":"Simic Locket",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":12,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"U",
-       "title":"Sphinx of the Guildpact",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":9
-    },
-    {
-       "id":13,
-       "isFlip":false,
-       "color":"A",
-       "rarity":"R",
-       "title":"Tome of the Guildpact",
-       "setCode":"RNA",
-       "price":2,
-       "quantity":4
-    },
-    {
-       "id":14,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"R",
-       "title":"Awaken the Erstwhile",
-       "setCode":"RNA",
-       "price":2,
-       "quantity":4
-    },
-    {
-       "id":15,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"U",
-       "title":"Bankrupt in Blood",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":8
-    },
-    {
-       "id":16,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Blade Juggler",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":18
-    },
-    {
-       "id":17,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Bladebrand",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":19
-    },
-    {
-       "id":18,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"U",
-       "title":"Bloodmist Infiltrator",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":6
-    },
-    {
-       "id":19,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Carrion Imp",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":20,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Catacomb Crocodile",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":21,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"U",
-       "title":"Clear the Stage",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":8
-    },
-    {
-       "id":22,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Consign to the Pit",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":19
-    },
-    {
-       "id":23,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"U",
-       "title":"Cry of the Carnarium",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":3
-    },
-    {
-       "id":24,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Dead Revels",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":25,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Debtors Transport",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    },
-    {
-       "id":26,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"U",
-       "title":"Drill Bit",
-       "setCode":"RNA",
-       "price":0.5,
-       "quantity":10
-    },
-    {
-       "id":27,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"R",
-       "title":"Font of Agonies",
-       "setCode":"RNA",
-       "price":2,
-       "quantity":4
-    },
-    {
-       "id":28,
-       "isFlip":false,
-       "color":"B",
-       "rarity":"C",
-       "title":"Grotesque Demise",
-       "setCode":"RNA",
-       "price":0.25,
-       "quantity":20
-    }
-];
+// Original card object for reference
+// {
+//    "id":28,
+//    "isFlip":false,
+//    "color":"B",
+//    "rarity":"C",
+//    "title":"Grotesque Demise",
+//    "setCode":"RNA",
+//    "price":0.25,
+//    "quantity":20
+// }
 
 const scryfallTestData = [
    {"object":"card","id":"73a32fa2-da7a-442d-89d9-cf1461441f4a","oracle_id":"88929ea9-900f-4dbb-b16c-cf3bad4e410c","multiverse_ids":[460782],"name":"Progenitor Mimic","lang":"en","released_at":"2019-02-15","uri":"https://api.scryfall.com/cards/73a32fa2-da7a-442d-89d9-cf1461441f4a","scryfall_uri":"https://scryfall.com/card/gk2/123/progenitor-mimic?utm_source=api","layout":"normal","highres_image":false,"image_uris":{"small":"https://img.scryfall.com/cards/small/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","normal":"https://img.scryfall.com/cards/normal/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","large":"https://img.scryfall.com/cards/large/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","png":"https://img.scryfall.com/cards/png/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.png?1550112773","art_crop":"https://img.scryfall.com/cards/art_crop/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773","border_crop":"https://img.scryfall.com/cards/border_crop/front/7/3/73a32fa2-da7a-442d-89d9-cf1461441f4a.jpg?1550112773"},"mana_cost":"{4}{G}{U}","cmc":6.0,"type_line":"Creature — Shapeshifter","oracle_text":"You may have Progenitor Mimic enter the battlefield as a copy of any creature on the battlefield, except it has \"At the beginning of your upkeep, if this creature isn't a token, create a token that's a copy of this creature.\"","power":"0","toughness":"0","colors":["G","U"],"color_identity":["G","U"],"legalities":{"standard":"not_legal","future":"not_legal","frontier":"not_legal","modern":"legal","legacy":"legal","pauper":"not_legal","vintage":"legal","penny":"not_legal","commander":"legal","duel":"legal","oldschool":"not_legal"},"games":["paper"],"reserved":false,"foil":false,"nonfoil":true,"oversized":false,"promo":false,"reprint":true,"set":"gk2","set_name":"RNA Guild Kit","set_uri":"https://api.scryfall.com/sets/ce193344-b2a8-4b56-8243-c6ba4f6e20ef","set_search_uri":"https://api.scryfall.com/cards/search?order=set\u0026q=e%3Agk2\u0026unique=prints","scryfall_set_uri":"https://scryfall.com/sets/gk2?utm_source=api","rulings_uri":"https://api.scryfall.com/cards/73a32fa2-da7a-442d-89d9-cf1461441f4a/rulings","prints_search_uri":"https://api.scryfall.com/cards/search?order=released\u0026q=oracleid%3A88929ea9-900f-4dbb-b16c-cf3bad4e410c\u0026unique=prints","collector_number":"123","digital":false,"rarity":"mythic","artist":"Daarken","border_color":"black","frame":"2015","frame_effect":"","full_art":false,"story_spotlight":false,"edhrec_rank":614,"related_uris":{"gatherer":"http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=460782","tcgplayer_decks":"https://decks.tcgplayer.com/magic/deck/search?contains=Progenitor+Mimic\u0026page=1\u0026partner=Scryfall\u0026utm_campaign=affiliate\u0026utm_medium=scryfall\u0026utm_source=scryfall","edhrec":"http://edhrec.com/route/?cc=Progenitor+Mimic","mtgtop8":"http://mtgtop8.com/search?MD_check=1\u0026SB_check=1\u0026cards=Progenitor+Mimic"}},
@@ -340,6 +69,7 @@ const userCardData = [{
 const manipScryfallData = (card) => {
    // TODO: need to capture images from cards that have cardFace properties rather than image links
    let imageUri = null;
+   let color = null;
 
    if (!card.image_uris) {
       imageUri = null
@@ -347,12 +77,16 @@ const manipScryfallData = (card) => {
       imageUri = card.image_uris.normal
    }
 
+   if (card.colors && card.colors.length > 0) {
+      color = card.colors.join('');
+   }
+
    return {
       scryfall_id: card.id,
       title: card.name,
       scryfall_uri: card.scryfall_uri,
       image_uri: imageUri,
-      colors: card.color_identity.join(''),
+      colors: color,
       reserved: card.reserved,
       setCode: card.set,
       rarity: card.rarity
@@ -396,7 +130,7 @@ const seed = () => {
 
       let manipulatedData = scryfallCards.map(el => manipScryfallData(el));
 
-      // The following logic manually sets the foreign key reference on
+      // The following several lines of logic manually sets the foreign key reference on
       // the card model to newly created cardInventory models
       if (cardInvArray.length !== manipulatedData.length) { // If not, seeding will go wrong...very wrong
          throw new Error('CardInventory and Card seed array lengths must be equal');

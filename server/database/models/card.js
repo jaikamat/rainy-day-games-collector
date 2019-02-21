@@ -23,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         colors: {
             type: Sequelize.STRING, // Note: joined from source array into single string
-            allowNull: false
+            allowNull: true
         },
         reserved: {
             type: Sequelize.BOOLEAN,
