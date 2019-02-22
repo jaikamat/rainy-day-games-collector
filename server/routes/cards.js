@@ -90,11 +90,23 @@ router.post('/update-collection', isAdmin, (req, res) => {
     });
 });
 
-router.get('/search', (req, res) => {
+router.get('/search/title', (req, res) => {
     cardController.getCardByTitle(req.query.title)
     .then((card) => {
         res.status(200);
         res.send(card);
+    }).catch((error) => {
+        res.status(500);
+        res.send(error.stack)
+        console.log(error);
+    });
+});
+
+router.get('/search/fuzzy', (req, res) => {
+    cardController.getCardsBySubstr(req.query.str)
+    .then((cards) => {
+        res.status(200);
+        res.send(cards);
     }).catch((error) => {
         res.status(500);
         res.send(error.stack)

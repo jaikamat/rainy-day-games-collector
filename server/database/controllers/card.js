@@ -1,5 +1,6 @@
 const Card = require('../models').card;
 const CardInventory = require('../models').cardInventory;
+const sequelize = require('../models').sequelize;
 
 /**
  * Writes a card object to the card table
@@ -72,6 +73,33 @@ async function getCardByTitle(title) {
 }
 
 /**
+ * TODO: Convert to ORM-based query
+ * Executes a raw sql query to search for cards based on partial string matches
+ * @param {String} str The search string
+ * @returns Returns an array of cards
+ */
+async function getCardsBySubstr(str) {
+    if (!str) {
+        throw new Error('Search string must be provided');
+    }
+    if (str.length < 3) {
+        throw new Error('Must search on at least 3 characters');
+    }
+
+    // Create a regex string to insert into a native sql query
+    let queryStr = str.trim().split(' ').join('%') + '%';
+
+    return await sequelize.query(
+        `SELECT *
+        FROM card
+        LEFT JOIN "cardInventory"
+        ON card.card_id = "cardInventory"."cardInventory_id"
+        WHERE LOWER(title) LIKE LOWER(:string)
+        ORDER BY title;`
+    , { replacements: { string: queryStr }, type: sequelize.QueryTypes.SELECT });
+}
+
+/**
  * Retrieves all the cards stored in database instance
  * @returns Returns an array of card objects
  */
@@ -109,6 +137,7 @@ async function getCardsPaginated(pageNumber, numRecords) {
 }
 
 module.exports.getCardByTitle = getCardByTitle;
+module.exports.getCardsBySubstr = getCardsBySubstr;
 module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
