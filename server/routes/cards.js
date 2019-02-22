@@ -103,7 +103,7 @@ router.get('/search/title', (req, res) => {
 });
 
 router.get('/search/fuzzy', (req, res) => {
-    cardController.getCardsBySubstr(req.query.str)
+    cardController.getCardsBySubstr(req.query.title)
     .then((cards) => {
         res.status(200);
         res.send(cards);
