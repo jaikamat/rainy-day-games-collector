@@ -1,5 +1,6 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
+const fs = require('fs');
 
 /**
  * Fetches HTML for Cheerio.js to parse. 
@@ -22,6 +23,7 @@ class Card {
         this.rarity = cardObj.rarity;
         this.title = cardObj.title;
         this.setCode = cardObj.setCode;
+        this.isFoil = cardObj.isFoil;
         if (!this.isFlip) {
             this.price = Card.convertNum(priceString);
         }
@@ -135,6 +137,7 @@ async function getCards() {
             card.price = price;
             card.quantity = quantity;
             card.setCode = setCode;
+            card.isFoil = card.title.includes('(FOIL)') ? true : false;
 
             cardData.push(new Card(card));
         }
@@ -151,5 +154,12 @@ async function getCards() {
         return Card.removeCards(card, filters);
     });
 }
+
+getCards()
+.then(cards => {
+    fs.writeFileSync('./rdg-scraped-data.json', JSON.stringify(cards));
+}).catch(error => {
+    console.log(error);
+});
 
 module.exports.getCards = getCards;

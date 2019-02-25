@@ -44,6 +44,10 @@ module.exports = (sequelize, Sequelize) => {
         quantity: {
             type: Sequelize.INTEGER,
             defaultValue: 0
+        },
+        isFoil: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
         }
     });
 

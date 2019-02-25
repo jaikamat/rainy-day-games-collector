@@ -143,21 +143,6 @@ router.post('/rdg/update', isAdmin, (req, res) => {
     });
 })
 
-// TODO: This function takes a while to execute in sqlite3.
-// Write some frontend functionality to show the user progress
-router.post('/seed', isAdmin, (req, res) => {
-    scrape.getCards().then((cards) => {
-        return Promise.all(cards.map(card => cardController.createCard(card)));
-    }).then((cards) => {
-        res.status(200);
-        res.send('Scrape and seed complete!');
-    }).catch((err) => {
-        res.status(500);
-        res.send('ERROR MESSAGE!')
-        console.log(err);
-    });
-});
-
 router.post('/wishlist', isAuthenticated, (req, res) => {
     userCardController.addCardToWishlist(req.user.user_id, req.body.card_id)
     .then((createdUserCard) => {
