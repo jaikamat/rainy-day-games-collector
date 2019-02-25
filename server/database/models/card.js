@@ -44,13 +44,6 @@ module.exports = (sequelize, Sequelize) => {
         quantity: {
             type: Sequelize.INTEGER,
             defaultValue: 0
-        },
-        cardInventory_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: 'cardInventory',
-                key: 'cardInventory_id'
-            }
         }
     });
 
