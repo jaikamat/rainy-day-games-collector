@@ -37,6 +37,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        price: {
+            type: Sequelize.DECIMAL,
+            defaultValue: 0
+        },
+        quantity: {
+            type: Sequelize.INTEGER,
+            defaultValue: 0
+        },
         cardInventory_id: {
             type: Sequelize.INTEGER,
             references: {
@@ -49,7 +57,6 @@ module.exports = (sequelize, Sequelize) => {
     // Create associations
     Card.associate = (models) => {
         Card.belongsToMany(models.users, { through: models.userCard });
-        Card.belongsTo(models.cardInventory, { foreignKey: 'cardInventory_id' });
     };
 
     return Card

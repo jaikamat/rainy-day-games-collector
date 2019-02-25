@@ -1,5 +1,4 @@
 const Card = require('../models').card;
-const CardInventory = require('../models').cardInventory;
 const sequelize = require('../models').sequelize;
 
 /**
@@ -35,28 +34,16 @@ async function updateCard(id, qty) {
     if (!Number.isInteger(quantity)) {
         throw new Error('Quantity must be an integer value');
     }
-
-    return await Card.findOne({
-        where: { card_id: id }
-    }).then(card => {
-        return CardInventory.update({
-            quantity: quantity
-        }, {
-            where: {
-                cardInventory_id: card.cardInventory_id
-            }
-        })
-    }).then((affectedRows) => {
-        if (affectedRows[0] === 0) {
-            return "No cards were updated"
-        } else {
-            // Return the card that was updated - must re-query
-            return Card.findOne({
-                where: { card_id: id },
-                include: [{ model: CardInventory }]
-            });
+    
+    let updatedCard = await Card.update(
+        { quantity: quantity },
+        {
+            where: { card_id: id },
+            returning: true  // Returns the updated entry (Postgres only)
         }
-    });
+    )
+    
+    return updatedCard[1][0].dataValues;
 }
 
 /**
@@ -67,8 +54,7 @@ async function updateCard(id, qty) {
  */
 async function getCardByTitle(title) {
     return Card.findAll({
-        where: { title: title },
-        include: [{ model: CardInventory }]
+        where: { title: title }
     });
 }
 
@@ -92,8 +78,6 @@ async function getCardsBySubstr(str) {
     return await sequelize.query(
         `SELECT *
         FROM card
-        LEFT JOIN "cardInventory"
-        ON card.card_id = "cardInventory"."cardInventory_id"
         WHERE LOWER(title) LIKE LOWER(:string)
         ORDER BY title;`
     , { replacements: { string: queryStr }, type: sequelize.QueryTypes.SELECT });
@@ -104,11 +88,7 @@ async function getCardsBySubstr(str) {
  * @returns Returns an array of card objects
  */
 async function getAllCards() {
-    return await Card.findAll({
-        include: [{
-            model: CardInventory
-        }]
-    });
+    return await Card.findAll();
 }
 
 /**

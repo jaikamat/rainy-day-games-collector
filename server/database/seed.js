@@ -94,7 +94,7 @@ const manipScryfallData = (card) => {
 }
 
 // Seeds the database with data depending on the node environment variable
-const seed = () => {
+async function seed() {
    const performance = require('perf_hooks').performance;
    let env = process.env.NODE_ENV || 'development'
    let scryfallCards; // Assigned depending on environment variables
@@ -112,43 +112,22 @@ const seed = () => {
       throw new Error('Seeding could not be completed. Check NODE_ENV');
    }
 
-   return models.sequelize.sync({ force: true })
-   .then(() => console.log('Database models are fine'))
-   .then(() => {
-      return Promise.all(userData.map(el => models.users.create(el)));
-   })
-   .then(() => {
-      t0 = performance.now();
+   await models.sequelize.sync({ force: true });
+   
+   console.log('Database models are fine');
+   
+   await Promise.all(userData.map(el => models.users.create(el)));
+   t0 = performance.now();
+   
+   let manipulatedData = scryfallCards.map(el => manipScryfallData(el));
 
-      return models.cardInventory.bulkCreate(scryfallCards.map(el => {}))
-      .then(() => {
-         return models.cardInventory.findAll();
-      });
-   })
-   .then(cardInvArray => {
-      console.log('CardInventory entries seeded');
+   await models.card.bulkCreate(manipulatedData);
 
-      let manipulatedData = scryfallCards.map(el => manipScryfallData(el));
+   await models.userCard.bulkCreate(userCardData);
 
-      // The following several lines of logic manually sets the foreign key reference on
-      // the card model to newly created cardInventory models
-      if (cardInvArray.length !== manipulatedData.length) { // If not, seeding will go wrong...very wrong
-         throw new Error('CardInventory and Card seed array lengths must be equal');
-      }
-      
-      manipulatedData.forEach((card, index, array) => {
-         array[index].cardInventory_id = index + 1;
-      });
-
-      return models.card.bulkCreate(manipulatedData);;
-   })
-   .then(() => models.userCard.bulkCreate(userCardData))
-   .then(() => {
-      t1 = performance.now();
-      console.log('Card entries seeded');
-      console.log("Seeding took " + ((t1 - t0)/1000).toFixed(3) + " seconds");
-   })
-   .catch(error => console.log(error));
+   t1 = performance.now();
+   console.log('Card entries seeded');
+   console.log("Seeding took " + ((t1 - t0)/1000).toFixed(3) + " seconds");
 }
 
 module.exports.seed = seed;

@@ -192,7 +192,7 @@ describe('User walkthrough', function() {
         })
         .expect(200)
         .then(response => {
-            assert.equal(response.body.cardInventory.quantity, 17);
+            assert.equal(response.body.quantity, 17);
         }).then(() => {
             done();
         }, done);
@@ -204,7 +204,7 @@ describe('User walkthrough', function() {
         .then(response => {
             let card = response.body.find(el => el.card_id === 14);
     
-            assert.equal(card.cardInventory.quantity, 17);
+            assert.equal(card.quantity, 17);
         }).then(() => {
             done();
         }, done);

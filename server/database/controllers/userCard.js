@@ -1,6 +1,5 @@
 const Card = require('../models').card;
 const UserCard = require('../models').userCard;
-const CardInventory = require('../models').cardInventory;
 
 /**
  * Retrieves all cards in the userCard table assigned to a user
@@ -13,10 +12,7 @@ async function getWishlist(userId) {
             user_id: userId
         },
         include: [{
-            model: Card,
-            include: [{
-                model: CardInventory
-            }]
+            model: Card
         }]
     });
 }
