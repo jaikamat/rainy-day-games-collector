@@ -1,5 +1,3 @@
-const models = require('../database/models');
-
 // Original card object for reference
 // {
 //    "id":28,
@@ -94,7 +92,7 @@ const manipScryfallData = (card) => {
 }
 
 // Seeds the database with data depending on the node environment variable
-async function seed() {
+async function seed(models) {
    const performance = require('perf_hooks').performance;
    let env = process.env.NODE_ENV || 'development'
    let scryfallCards; // Assigned depending on environment variables

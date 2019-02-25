@@ -9,10 +9,11 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passportConfig = require('./passport/config');
 const PORT = 1337;
+const models = require('./database/models');
 const seed = require('./database/seed');
 
 // Require models separately and seed based on NODE_ENV
-seed.seed().then(() => console.log('Seeding complete'));
+seed.seed(models).then(() => console.log('Seeding complete'));
 
 app.set('view engine', 'html');
 app.set('view options', { layout: false });
