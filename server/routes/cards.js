@@ -127,6 +127,22 @@ router.post('/update/:id', isAdmin, (req, res) => {
     });
 });
 
+router.post('/rdg/update', isAdmin, (req, res) => {
+    scrape.getCards()
+    .then(cards => {
+        console.log(cards.length);
+        return cardController.updateCardsFromRDG(cards);
+    })
+    .then(updatedRows => {
+        res.status(200);
+        res.send(updatedRows);
+    }).catch(error => {
+        res.status(500);
+        res.send(error.stack);
+        console.log(error);
+    });
+})
+
 // TODO: This function takes a while to execute in sqlite3.
 // Write some frontend functionality to show the user progress
 router.post('/seed', isAdmin, (req, res) => {

@@ -49,7 +49,7 @@ class Card {
         if (string !== undefined && !isNaN(Number(string))) {
             return Number(string);
         }
-        return 'not found';
+        return 0; // 'not found' or missing info defaults to 0
     }
 
     /**
