@@ -155,11 +155,11 @@ async function getCards() {
     });
 }
 
-// getCards()
-// .then(cards => {
-//     fs.writeFileSync('./rdg-scraped-data.json', JSON.stringify(cards));
-// }).catch(error => {
-//     console.log(error);
-// });
+getCards()
+.then(cards => {
+    fs.writeFileSync('./rdg-scraped-data.json', JSON.stringify(cards));
+}).catch(error => {
+    console.log(error);
+});
 
 module.exports.getCards = getCards;

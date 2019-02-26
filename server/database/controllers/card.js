@@ -1,5 +1,8 @@
 const Card = require('../models').card;
 const sequelize = require('../models').sequelize;
+const rdgUpdate = require('../rdg_update');
+const models = require('../models');
+
 
 /**
  * Writes a card object to the card table
@@ -116,36 +119,12 @@ async function getCardsPaginated(pageNumber, numRecords) {
     }
 }
 
-// see https://github.com/sequelize/sequelize/issues/2077
-// and https://github.com/sequelize/sequelize/issues/4322
 // TODO: This function MUST capture errors and write them to a separate file for analysis
-
-async function updateCardsFromRDG(cardArray) {
-    return await Promise.all(cardArray.map(el => {
-        let cardTitleRegex = el.title.toLowerCase().trim().split(' ').join('%') + '%';
-        let setCode = el.setCode.toLowerCase().trim();
-        let price = el.price;
-        let quantity = el.quantity;
-
-        return Card.update({
-            price: price,
-            quantity: quantity
-        }, {
-            where: {
-                $and: [
-                    sequelize.where(
-                        sequelize.fn('lower', sequelize.col('title')),
-                        { like: cardTitleRegex }
-                    ),
-                    sequelize.where(
-                        sequelize.fn('lower', sequelize.col('setCode')),
-                        setCode
-                    )
-                ]
-            },
-            // returning: true
-        });
-    }))
+async function updateCardsFromRDG(setCode) {
+    if (!setCode) {
+        throw new Error('Set code is required to update');
+    }
+    return await rdgUpdate.updateScryfallWithRDG(models, setCode);
 }
 
 module.exports.getCardByTitle = getCardByTitle;

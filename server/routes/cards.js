@@ -1,4 +1,3 @@
-const scrape = require('../database/scrape');
 const cardController = require('../database/controllers/card');
 const userCardController = require('../database/controllers/userCard');
 const express = require('express');
@@ -31,7 +30,6 @@ const isAdmin = (req, res, next) => {
 // Remember: The GET url to access this is '/cards'
 router.get('/', (req, res) => {
     cardController.getAllCards().then((cards) => {
-        // scrape.getCards().then((cards) => {
         res.status(200);
         res.send(cards);
     }).catch((error) => {
@@ -46,43 +44,6 @@ router.get('/paginate/:page', (req, res) => {
     .then((data) => {
         res.status(200);
         res.send(data);
-    }).catch((error) => {
-        res.status(500);
-        res.send('ERROR MESSAGE!')
-        console.log(error);
-    });
-});
-
-router.post('/update-collection', isAdmin, (req, res) => {
-    Promise.all([scrape.getCards(), cardController.getAllCards()])
-    .then((cards) => {
-        let newCards = cards[0];
-        let oldCards = cards[1];
-        let newProduct = [];
-
-        for (let i = 0; i < newCards.length; i++) { // Iterate over newly scraped data
-            let index = oldCards.findIndex((el) => {
-                return newCards[i].title === el.title // Title must be equal
-                && newCards[i].setCode === el.setCode // Set Code must be equal
-                && newCards[i].rarity === el.rarity // Rarity must be equal
-            });
-
-            if (index >= 0) { // Card was found
-                if (newCards[i].quantity !== oldCards[index].quantity) { // Check for changes in quantity
-                    newProduct.push(newCards[i]);
-                    cardController.updateCard(newCards[i]);
-                }
-                oldCards.splice(index, 1); // Remove the card from the array to increase speed
-
-            } else if (index === -1) { // If the index is not found, then add card to db
-                newProduct.push(newCards[i]);
-                cardController.createCard(newCards[i]);
-            }
-        }
-        res.status(200);
-        res.render('cards.html', {
-            cards: newProduct
-        });
     }).catch((error) => {
         res.status(500);
         res.send('ERROR MESSAGE!')
@@ -128,11 +89,7 @@ router.post('/update/:id', isAdmin, (req, res) => {
 });
 
 router.post('/rdg/update', isAdmin, (req, res) => {
-    scrape.getCards()
-    .then(cards => {
-        console.log(cards.length);
-        return cardController.updateCardsFromRDG(cards);
-    })
+    return cardController.updateCardsFromRDG(req.query.setCode)
     .then(updatedRows => {
         res.status(200);
         res.send(updatedRows);
