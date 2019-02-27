@@ -1,17 +1,8 @@
 const cheerio = require('cheerio');
-const axios = require('axios');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
-
-/**
- * Fetches HTML for Cheerio.js to parse. 
- * @param {String} url
- * @returns Returns the cheerio object
- */
-async function retrieveHTML(url) {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
-    return $;
-}
+const ProgressBar = require('progress');
+const BASE_URL = 'http://rainy-day-games.com/';
 
 class Card {
     // TODO: implement more functions to sanitize inputs
@@ -83,6 +74,49 @@ class Card {
 }
 
 /**
+ * Fetches HTML for Cheerio.js to parse. 
+ * @param {String} url
+ * @returns Returns the cheerio object
+ */
+async function retrieveHTML(url) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+    const bodyHTML = await page.evaluate(() => document.body.innerHTML);
+    await browser.close();
+
+    const $ = cheerio.load(bodyHTML);
+    return $;
+}
+
+/**
+ * Iterates over setCode URIs and fetches HTML for Cheerio.js to parse
+ * @param {Array} setHrefs An array of mtg set URIs
+ * @returns Returns an array of Cheerio.js objects
+ */
+async function collectSetPages(setHrefs) {
+    let setPages = [];
+    const browser = await puppeteer.launch();
+    let puppetBar = new ProgressBar('Puppeteer working [:bar] :elapsed sec elapsed', { total: 50 });
+
+    for (let i = 0; i < setHrefs.length; i++) { // Loop over all setcode URI's
+        let href = setHrefs[i];
+        const page = await browser.newPage();
+        await page.goto(BASE_URL + href);
+        const bodyHTML = await page.evaluate(() => document.body.innerHTML);        
+        setPages.push(cheerio.load(bodyHTML));
+        await page.close();
+
+        puppetBar.tick(50/setHrefs.length);
+    }
+    
+    console.log('\nPuppeteer requests complete');
+    await browser.close();
+
+    return setPages;
+}
+
+/**
  * Scrapes the main singles set-selection page for links, then iterates over 
  * those links, collecting table data for each card.
  * @returns Returns an array of card objects.
@@ -90,11 +124,10 @@ class Card {
 async function getCards() {
     console.log('Initiating scrape')
 
-    const BASE_URL = 'http://rainy-day-games.com/';
     let setHrefs = [];
     let cardData = [];
     
-    // get the initial html for parsing
+    // Get the initial html for parsing
     let $ = await retrieveHTML(BASE_URL + 'magic.php');
 
     $('td > a').each((index, element) => {
@@ -105,20 +138,12 @@ async function getCards() {
         return Card.getSetCode(href);
     });
 
-    let asyncToResolve = setHrefs.map((href) => {
-        return retrieveHTML(BASE_URL + href);
-    });
+    let setPages = await collectSetPages(setHrefs);
 
-    // using Promise.all to make get requests 
-    // concurrently rather than one at a time in 
-    // the `for` loop significantly speeds up scraping
-    setHrefs = await Promise.all(asyncToResolve);
-
-    console.log('Async requests complete')
+    let collectBar = new ProgressBar('Collecting cards [:bar] :elapsed sec elapsed', { total: 50 });
     
-    for (let i = 0; i < setHrefs.length; i++) {
-        console.log('Collecting cards' + '.'.repeat(i));
-        let $ = setHrefs[i];
+    for (let i = 0; i < setPages.length; i++) {
+        let $ = setPages[i]; // The array is already a Cheerio object, but this improves readability
         let rows = $('tr');
 
         for (let j = 0; j < rows.length; j++) {
@@ -141,8 +166,10 @@ async function getCards() {
 
             cardData.push(new Card(card));
         }
+        collectBar.tick(50/setPages.length);
     }
-    console.log('Scrape complete')
+    console.log('\nScrape complete');
+
     return cardData.filter((card) => {
         // Filtering on 'ZZT' and 'UST' because un-sets and tokens are ignored,
         // and source data produces errors
