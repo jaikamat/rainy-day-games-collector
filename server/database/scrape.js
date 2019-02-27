@@ -9,7 +9,7 @@ class Card {
     constructor (cardObj) {
         let priceString = cardObj.price.split("$")[1];
 
-        this.isFlip = Card.isFLip(cardObj.rarity);
+        this.isFlip = Card.isFLip(cardObj.price);
         this.color = cardObj.color;
         this.rarity = cardObj.rarity;
         this.title = cardObj.title;
