@@ -7,7 +7,8 @@ module.exports = (sequelize, Sequelize) => {
         },
         scryfall_id: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         title: {
             type: Sequelize.STRING,
