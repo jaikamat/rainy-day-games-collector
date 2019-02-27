@@ -11,7 +11,7 @@ async function updateScryfallWithRDG(models, setStr) {
     console.log('Attempting to update ' + filteredCards.length + ' cards');
 
     for(el of filteredCards) {
-        let title = el.title.replace('(FOIL)', '').toLowerCase().trim().split(' '); // Some titles use `(FOIL)` as an identifier, remove it
+        let title = el.title.toLowerCase().trim().split(' ');
 
         // Cards in RDG data do not have punctuation - here we remove 's' from the ends of
         // all strings in an effort to force a looser fuzzy search

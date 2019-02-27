@@ -12,7 +12,9 @@ class Card {
         this.isFlip = Card.isFLip(cardObj.price);
         this.color = cardObj.color;
         this.rarity = cardObj.rarity;
-        this.title = cardObj.title;
+        this.title = cardObj.title.includes('(FOIL)') ?
+            cardObj.title.replace('(FOIL)', '') :
+            cardObj.title;
         this.setCode = cardObj.setCode;
         this.isFoil = cardObj.isFoil;
         if (!this.isFlip) {
