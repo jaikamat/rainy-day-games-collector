@@ -3,7 +3,6 @@ const sequelize = require('../models').sequelize;
 const rdgUpdate = require('../rdg_update');
 const models = require('../models');
 
-
 /**
  * Writes a card object to the card table
  * @param {Object} card The card object to create
@@ -50,14 +49,36 @@ async function updateCard(id, qty) {
 }
 
 /**
- // TODO: Possibly have this method be more modular and take more search params
  * Queries the card table for a card by title
  * @param {String} title The case sensitive card title
  * @returns Returns an array of values
  */
 async function getCardByTitle(title) {
-    return Card.findAll({
+    return await Card.findAll({
         where: { title: title }
+    });
+}
+
+/**
+ * Queries the database for a number of defined card properties
+ * @param {Object} search The request body with query properties
+ * @returns Returns an array of cards
+ */
+async function getCardsDynamic(search) {
+    let where = {};
+    let priceRange = {}; // To fill with Sequelize's string operators - https://sequelize.readthedocs.io/en/2.0/docs/querying/
+
+    if (search.title) where.title = search.title;
+    if (search.scryfall_id) where.scryfall_id = search.scryfall_id;
+    if (search.card_id) where.card_id = search.card_id;
+    if (search.setCode) where.setCode = search.setCode;
+    if (search.lowPrice) priceRange.$gte = search.lowPrice; // Sequelize >= operator
+    if (search.highPrice) priceRange.$lte = search.highPrice; // Sequelize <= operator
+
+    where.price = { $and: priceRange }; // Sequelize AND operator
+
+    return await Card.findAll({
+        where: where
     });
 }
 
@@ -120,6 +141,10 @@ async function getCardsPaginated(pageNumber, numRecords) {
 }
 
 // TODO: This function MUST capture errors and write them to a separate file for analysis
+/**
+ * Merges data from RDG's json into the local database, one set at a time
+ * @param {String} setCode The 3-letter mtg expansion code
+ */
 async function updateCardsFromRDG(setCode) {
     if (!setCode) {
         throw new Error('Set code is required to update');
@@ -133,4 +158,5 @@ module.exports.getAllCards = getAllCards;
 module.exports.updateCard = updateCard;
 module.exports.createCard = createCard;
 module.exports.getCardsPaginated = getCardsPaginated;
+module.exports.getCardsDynamic = getCardsDynamic;
 module.exports.updateCardsFromRDG = updateCardsFromRDG;

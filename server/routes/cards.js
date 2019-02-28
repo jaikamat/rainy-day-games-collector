@@ -51,11 +51,21 @@ router.get('/paginate/:page', (req, res) => {
     });
 });
 
-router.get('/search/title', (req, res) => {
-    cardController.getCardByTitle(req.query.title)
-    .then((card) => {
+router.get('/search/dynamic', (req, res) => {
+    const bod = req.body;
+    let searchParams = {};
+
+    if (bod.title) searchParams.title = bod.title;
+    if (bod.scryfall_id) searchParams.scryfall_id = bod.scryfall_id;
+    if (bod.card_id) searchParams.card_id = bod.card_id;
+    if (bod.setCode) searchParams.setCode = bod.setCode;
+    if (bod.lowPrice) searchParams.lowPrice = bod.lowPrice;
+    if (bod.highPrice) searchParams.highPrice = bod.highPrice;
+
+    cardController.getCardsDynamic(searchParams)
+    .then((cards) => {
         res.status(200);
-        res.send(card);
+        res.send(cards);
     }).catch((error) => {
         res.status(500);
         res.send(error.stack)
