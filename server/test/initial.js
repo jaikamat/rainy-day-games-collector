@@ -188,11 +188,15 @@ describe('User walkthrough', function() {
 
         api.post('/cards/update/' + param)
         .send({
-            quantity: 17
+            quantity: 17,
+            foilQuantity: 1,
+            price: 21.25
         })
         .expect(200)
         .then(response => {
             assert.equal(response.body.quantity, 17);
+            assert.equal(response.body.foilQuantity, 1);
+            assert.equal(response.body.price, 21.25);
         }).then(() => {
             done();
         }, done);
@@ -205,6 +209,8 @@ describe('User walkthrough', function() {
             let card = response.body.find(el => el.card_id === 14);
     
             assert.equal(card.quantity, 17);
+            assert.equal(card.foilQuantity, 1);
+            assert.equal(card.price, 21.25);
         }).then(() => {
             done();
         }, done);

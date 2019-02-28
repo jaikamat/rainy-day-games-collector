@@ -86,8 +86,7 @@ router.get('/search/fuzzy', (req, res) => {
 });
 
 router.post('/update/:id', isAdmin, (req, res) => {
-    console.log('THE PARAM: ' + req.params.id);
-    cardController.updateCard(req.params.id, req.body.quantity)
+    cardController.updateCard(req.params.id, req.body)
     .then((card) => {
         res.status(200);
         res.send(card);

@@ -13,32 +13,22 @@ async function createCard(card) {
 }
 
 /**
- * Updates a card's `quantity` in the card table
- * @param {Object} card The card object with desired properties
+ * Updates a card's `quantity`, `foilQuantity`, and/or `price`
+ * @param {String} id The card database id
+ * @param {Object} props The card object with desired properties
  * @returns The affected card record
  */
-async function updateCard(id, qty) {
-    if (!qty) {
-        throw new Error('Quantity is required to update a card');
-    }
-    if (!id) {
-        throw new Error('Id is required to update a card');
-    }
+async function updateCard(id, props) {
+    if (!id) throw new Error('id is required to update a card');
 
-    const quantity = Number(qty);
+    let updateProps = {};
 
-    if (isNaN(quantity)) {
-        throw new Error('Quantity was not correct');
-    }
-    if (quantity < 0) {
-        throw new Error('Negative cards are not possible');
-    }
-    if (!Number.isInteger(quantity)) {
-        throw new Error('Quantity must be an integer value');
-    }
-    
+    if (props.quantity) updateProps.quantity = validateQuantity(props.quantity);
+    if (props.foilQuantity) updateProps.foilQuantity = validateQuantity(props.foilQuantity);
+    if (props.price) updateProps.price = validatePrice(props.price);
+
     let updatedCard = await Card.update(
-        { quantity: quantity },
+        updateProps,
         {
             where: { card_id: id },
             returning: true  // Returns the updated entry (Postgres only)
@@ -46,6 +36,35 @@ async function updateCard(id, qty) {
     )
     
     return updatedCard[1][0].dataValues;
+}
+
+/**
+ * Utility function that throws errors for illegal quantities
+ * @param {String} qty A string to be parsed to an integer
+ * @returns An integer value
+ */
+function validateQuantity(qty) {
+    let qtyConvert = Number(qty);
+
+    if (isNaN(qtyConvert)) throw new Error('Quantity was not correct');
+    if (qtyConvert < 0) throw new Error('Negative quantities are not possible');
+    if (!Number.isInteger(qtyConvert)) throw new Error('Quantity must be an integer value');
+
+    return qtyConvert;
+}
+
+/**
+ * Utility function that throws errors for illegal prices
+ * @param {String} price A string to be parsed to a number
+ * @returns A number
+ */
+function validatePrice(price) {
+    let priceConvert = Number(price);
+
+    if (isNaN(priceConvert)) throw new Error('Price was not correct');
+    if (priceConvert < 0) throw new Error('Negative prices are not possible');
+
+    return priceConvert;
 }
 
 /**
