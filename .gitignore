@@ -14,5 +14,8 @@ server/database/config.js
 #Ignore gigantic scryfall JSON
 server/scryfall-default-cards.json
 
+#Ignore RDG scraped data
+server/database/rdg-scraped-data.json
+
 #Ignore .env file with super secret tech
 server/.env
