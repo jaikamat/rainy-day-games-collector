@@ -1,7 +1,7 @@
-const Card = require('../models').card;
-const sequelize = require('../models').sequelize;
-const rdgUpdate = require('../rdg_update');
-const models = require('../models');
+const Card = require("../models").card;
+const sequelize = require("../models").sequelize;
+const rdgUpdate = require("../rdg_update");
+const models = require("../models");
 
 /**
  * Writes a card object to the card table
@@ -19,22 +19,20 @@ async function createCard(card) {
  * @returns The affected card record
  */
 async function updateCard(id, props) {
-    if (!id) throw new Error('id is required to update a card');
+    if (!id) throw new Error("id is required to update a card");
 
     let updateProps = {};
 
     if (props.quantity) updateProps.quantity = validateQuantity(props.quantity);
-    if (props.foilQuantity) updateProps.foilQuantity = validateQuantity(props.foilQuantity);
+    if (props.foilQuantity)
+        updateProps.foilQuantity = validateQuantity(props.foilQuantity);
     if (props.price) updateProps.price = validatePrice(props.price);
 
-    let updatedCard = await Card.update(
-        updateProps,
-        {
-            where: { card_id: id },
-            returning: true  // Returns the updated entry (Postgres only)
-        }
-    )
-    
+    let updatedCard = await Card.update(updateProps, {
+        where: { card_id: id },
+        returning: true // Returns the updated entry (Postgres only)
+    });
+
     return updatedCard[1][0].dataValues;
 }
 
@@ -46,9 +44,10 @@ async function updateCard(id, props) {
 function validateQuantity(qty) {
     let qtyConvert = Number(qty);
 
-    if (isNaN(qtyConvert)) throw new Error('Quantity was not correct');
-    if (qtyConvert < 0) throw new Error('Negative quantities are not possible');
-    if (!Number.isInteger(qtyConvert)) throw new Error('Quantity must be an integer value');
+    if (isNaN(qtyConvert)) throw new Error("Quantity was not correct");
+    if (qtyConvert < 0) throw new Error("Negative quantities are not possible");
+    if (!Number.isInteger(qtyConvert))
+        throw new Error("Quantity must be an integer value");
 
     return qtyConvert;
 }
@@ -61,8 +60,8 @@ function validateQuantity(qty) {
 function validatePrice(price) {
     let priceConvert = Number(price);
 
-    if (isNaN(priceConvert)) throw new Error('Price was not correct');
-    if (priceConvert < 0) throw new Error('Negative prices are not possible');
+    if (isNaN(priceConvert)) throw new Error("Price was not correct");
+    if (priceConvert < 0) throw new Error("Negative prices are not possible");
 
     return priceConvert;
 }
@@ -109,21 +108,29 @@ async function getCardsDynamic(search) {
  */
 async function getCardsBySubstr(str) {
     if (!str) {
-        throw new Error('Search string must be provided');
+        throw new Error("Search string must be provided");
     }
     if (str.length < 3) {
-        throw new Error('Must search on at least 3 characters');
+        throw new Error("Must search on at least 3 characters");
     }
 
     // Create a regex string to insert into a native sql query
-    let queryStr = str.trim().split(' ').join('%') + '%';
+    let queryStr =
+        str
+            .trim()
+            .split(" ")
+            .join("%") + "%";
 
     return await sequelize.query(
         `SELECT *
         FROM card
         WHERE LOWER(title) LIKE LOWER(:string)
-        ORDER BY title;`
-    , { replacements: { string: queryStr }, type: sequelize.QueryTypes.SELECT });
+        ORDER BY title;`,
+        {
+            replacements: { string: queryStr },
+            type: sequelize.QueryTypes.SELECT
+        }
+    );
 }
 
 /**
@@ -142,8 +149,8 @@ async function getAllCards() {
 async function getCardsPaginated(pageNumber, numRecords) {
     let page = pageNumber;
     let offset = 0;
-    
-    let cards = await Card.findAndCountAll()
+
+    let cards = await Card.findAndCountAll();
     let pages = Math.ceil(cards.count / numRecords);
     offset = numRecords * (page - 1);
 
@@ -156,7 +163,7 @@ async function getCardsPaginated(pageNumber, numRecords) {
         count: cards.count,
         pages: pages,
         cards: cardsPage
-    }
+    };
 }
 
 // TODO: This function MUST capture errors and write them to a separate file for analysis
@@ -166,7 +173,7 @@ async function getCardsPaginated(pageNumber, numRecords) {
  */
 async function updateCardsFromRDG(setCode) {
     if (!setCode) {
-        throw new Error('Set code is required to update');
+        throw new Error("Set code is required to update");
     }
     return await rdgUpdate.updateScryfallWithRDG(models, setCode);
 }

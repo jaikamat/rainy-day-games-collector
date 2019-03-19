@@ -1,4 +1,4 @@
-const User = require('../models').users;
+const User = require("../models").users;
 
 /**
  * Returns all users in the database
@@ -9,23 +9,26 @@ async function getUsers() {
 
 /**
  * Updates an existing user with a new username
- * @param {Integer} userId 
- * @param {String} username 
+ * @param {Integer} userId
+ * @param {String} username
  */
 async function updateUser(userId, username) {
     if (!username) {
-        throw new Error('Username is required to update a user');
+        throw new Error("Username is required to update a user");
     }
-    
-    return await User.update({
-        username: username
-    }, {
-        where: {
-            user_id: userId
+
+    return await User.update(
+        {
+            username: username
+        },
+        {
+            where: {
+                user_id: userId
+            }
         }
-    }).then((affectedRows) => {
+    ).then(affectedRows => {
         if (affectedRows[0] === 0) {
-            throw new Error('User was not updated')
+            throw new Error("User was not updated");
         } else {
             return User.findOne({
                 where: {
@@ -38,7 +41,7 @@ async function updateUser(userId, username) {
 
 /**
  * Deletes an existing user from the database
- * @param {Integer} userId 
+ * @param {Integer} userId
  */
 async function deleteUser(userId) {
     return await User.destroy({

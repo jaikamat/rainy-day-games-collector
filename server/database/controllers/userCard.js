@@ -1,9 +1,9 @@
-const Card = require('../models').card;
-const UserCard = require('../models').userCard;
+const Card = require("../models").card;
+const UserCard = require("../models").userCard;
 
 /**
  * Retrieves all cards in the userCard table assigned to a user
- * @param {Integer} userId 
+ * @param {Integer} userId
  * @returns userCard objects with cards populated
  */
 async function getWishlist(userId) {
@@ -11,9 +11,11 @@ async function getWishlist(userId) {
         where: {
             user_id: userId
         },
-        include: [{
-            model: Card
-        }]
+        include: [
+            {
+                model: Card
+            }
+        ]
     });
 }
 
@@ -30,14 +32,14 @@ async function addCardToWishlist(userId, cardId) {
             user_id: userId,
             card_id: cardId
         }
-    }).then((found) => {
+    }).then(found => {
         if (!found) {
             return UserCard.create({
                 user_id: userId,
                 card_id: cardId
             });
         } else {
-            throw new Error('Card already exists in wishlist');
+            throw new Error("Card already exists in wishlist");
         }
     });
 }

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Card = sequelize.define('card', {
+    const Card = sequelize.define("card", {
         card_id: {
             autoIncrement: true, // NOTE: This must be camelcase or it fails silently when attempting to return model instance id's in hooks
             primaryKey: true,
@@ -53,9 +53,9 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     // Create associations
-    Card.associate = (models) => {
+    Card.associate = models => {
         Card.belongsToMany(models.users, { through: models.userCard });
     };
 
-    return Card
+    return Card;
 };
